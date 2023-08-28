@@ -29,7 +29,7 @@ public class Pathfinder
     private static bool EvaluateNextNode(Dictionary<HexTile, Node> nodesNotEvaluated, Dictionary<HexTile, Node> nodesAlreadyEvaluated, HexTile origin, HexTile destination, bool move, out List<HexTile> path)
     {
        
-        var busyHex = new List<HexTile>();
+        //var busyHex = new List<HexTile>();
 
         var currentNode = GetCheapestNode(nodesNotEvaluated.Values.ToArray());
 
@@ -46,8 +46,8 @@ public class Pathfinder
 
         if (currentNode.target == destination)
         {
-            path.AddRange(busyHex);
-            busyHex.Clear();
+            //path.AddRange(busyHex);
+            //busyHex.Clear();
             path.Add(currentNode.target);
 
             while (currentNode.target != origin)
@@ -75,7 +75,7 @@ public class Pathfinder
             {
                 if (neigh.target.busy)
                 {
-                    busyHex.Add(neigh.target);
+                    //busyHex.Add(neigh.target);
                     continue;
                 }
             }

@@ -71,7 +71,8 @@ public class CameraRaycast : MonoBehaviour
         else 
         {
 
-            TileManager.Instance.LightEnemy(_targetUnit);
+            var aimcont = objectHit.GetComponentInChildren<BeAim>();
+
 
             if (Input.GetMouseButtonUp(0))
             {

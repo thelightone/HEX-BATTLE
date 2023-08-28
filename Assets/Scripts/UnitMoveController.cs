@@ -6,6 +6,7 @@ using UnityEngine;
 public class UnitMoveController : MonoBehaviour
 {
     public UnitFightController fightController;
+    public BeAim beAim;
 
     public HexTile startTile;
     public HexTile currentTile;
@@ -29,6 +30,7 @@ public class UnitMoveController : MonoBehaviour
     private void Start()
     {
         fightController = GetComponent<UnitFightController>();
+        beAim = GetComponentInChildren<BeAim>();
 
         gameObject.transform.position = startTile.transform.position + new Vector3(0, 1, 0);
 
@@ -36,7 +38,9 @@ public class UnitMoveController : MonoBehaviour
         active.SetActive(false);
 
         currentTile = startTile;
-        currentTile.busy = true;     
+        currentTile.busy = true;
+
+        beAim.UpdateCoord();
     }
 
     public void Move(HexTile destTile)
@@ -88,6 +92,7 @@ public class UnitMoveController : MonoBehaviour
         TileManager.Instance.DisSelect();
         TileManager.Instance.DisChooseUnit(this);
         isMoving = false;
+        beAim.UpdateCoord();
         BattleSystem.Instance.OnAct();
     }
 
