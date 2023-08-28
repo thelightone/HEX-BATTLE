@@ -8,6 +8,7 @@ public class CameraRaycast : MonoBehaviour
     private Camera _mainCamera;
     private HexTile _targetHex;
     private UnitMoveController _targetUnit;
+    private BeAim _activeAim;
     private Vector3 _mousePos;
 
     private void Start()
@@ -36,6 +37,7 @@ public class CameraRaycast : MonoBehaviour
             else
             {
                 TileManager.Instance.DisLightUnit();
+                _activeAim?.DislightAim();
 
                 if (TileManager.Instance.activeUnit != null && parent.GetComponent<HexTile>())
                 {
@@ -70,13 +72,15 @@ public class CameraRaycast : MonoBehaviour
 
         else 
         {
-
-            var aimcont = objectHit.GetComponentInChildren<BeAim>();
-
-
-            if (Input.GetMouseButtonUp(0))
+            if (TileManager.Instance.activeUnit != null)
             {
-                //TileManager.Instance.ChooseUnit(_targetUnit);
+                _activeAim = objectHit.GetComponentInChildren<BeAim>();
+                _activeAim.LightAims();
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //TileManager.Instance.ChooseUnit(_targetUnit);
+                }
             }
 
         }
