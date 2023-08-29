@@ -34,10 +34,26 @@ public class CameraRaycast : MonoBehaviour
             {
                 HighlightUnit(parent);
             }
+
+            else if (objectHit.GetComponent<AttackSector>())
+            {
+                _activeAim = objectHit.GetComponentInParent<BeAim>();
+
+                if (TileManager.Instance.activeUnit != null && _activeAim.moveController.player!= BattleSystem.Instance.curPlayer)
+                {                    
+                    _activeAim.LightAims();
+
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        _activeAim.Attack(_activeAim,parent.gameObject);
+                    }
+                }
+            }
             else
             {
                 TileManager.Instance.DisLightUnit();
-                _activeAim?.DislightAim();
+                _activeAim?.UpdateCoord();
+                _activeAim?.DislightAim(1);
 
                 if (TileManager.Instance.activeUnit != null && parent.GetComponent<HexTile>())
                 {
@@ -49,40 +65,30 @@ public class CameraRaycast : MonoBehaviour
                     }
                 }
             }
-
         }
     }
 
     private void HighlightUnit(Transform objectHit)
     {
-        
+
         _targetUnit = objectHit.GetComponent<UnitMoveController>();
 
         if (_targetUnit.player == BattleSystem.Instance.curPlayer)
         {
-
             TileManager.Instance.LightUnit(_targetUnit);
 
             if (Input.GetMouseButtonUp(0))
             {
                 TileManager.Instance.ChooseUnit(_targetUnit);
             }
-
         }
-
-        else 
-        {
-            if (TileManager.Instance.activeUnit != null)
-            {
-                _activeAim = objectHit.GetComponentInChildren<BeAim>();
-                _activeAim.LightAims();
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    //TileManager.Instance.ChooseUnit(_targetUnit);
-                }
-            }
-
-        }
+        //else 
+        //{
+        //    if (TileManager.Instance.activeUnit != null)
+        //    {
+        //        _activeAim = objectHit.GetComponentInChildren<BeAim>();
+        //        _activeAim.LightAims();
+        //    }
+        //}
     }
 }
