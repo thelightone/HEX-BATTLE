@@ -10,6 +10,7 @@ public class CameraRaycast : MonoBehaviour
     private UnitMoveController _targetUnit;
     private BeAim _activeAim;
     private Vector3 _mousePos;
+    private Transform objectHit;
 
     private void Start()
     {
@@ -27,28 +28,28 @@ public class CameraRaycast : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            Transform objectHit = hit.transform;
+            objectHit = hit.transform;
             var parent = objectHit.parent;
 
-            if (parent.GetComponent<UnitMoveController>())
+            if (objectHit.GetComponentInParent<UnitMoveController>())
             {
                 HighlightUnit(parent);
             }
 
-            else if (objectHit.GetComponent<AttackSector>())
-            {
-                _activeAim = objectHit.GetComponentInParent<BeAim>();
+            //else if (objectHit.GetComponent<AttackSector>())
+            //{
+            //    _activeAim = objectHit.GetComponentInParent<BeAim>();
 
-                if (TileManager.Instance.activeUnit != null && _activeAim.moveController.player!= BattleSystem.Instance.curPlayer)
-                {                    
-                    _activeAim.LightAims();
+            //    if (TileManager.Instance.activeUnit != null && _activeAim.moveController.player!= BattleSystem.Instance.curPlayer)
+            //    {                    
+            //        _activeAim.LightAims();
 
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        _activeAim.Attack(_activeAim,parent.gameObject);
-                    }
-                }
-            }
+            //        if (Input.GetMouseButtonUp(0))
+            //        {
+            //            _activeAim.Attack(_activeAim,parent.gameObject);
+            //        }
+            //    }
+            //}
             else
             {
                 TileManager.Instance.DisLightUnit();
@@ -68,10 +69,10 @@ public class CameraRaycast : MonoBehaviour
         }
     }
 
-    private void HighlightUnit(Transform objectHit)
+    private void HighlightUnit(Transform parent)
     {
 
-        _targetUnit = objectHit.GetComponent<UnitMoveController>();
+        _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
 
         if (_targetUnit.player == BattleSystem.Instance.curPlayer)
         {
@@ -82,13 +83,18 @@ public class CameraRaycast : MonoBehaviour
                 TileManager.Instance.ChooseUnit(_targetUnit);
             }
         }
-        //else 
-        //{
-        //    if (TileManager.Instance.activeUnit != null)
-        //    {
-        //        _activeAim = objectHit.GetComponentInChildren<BeAim>();
-        //        _activeAim.LightAims();
-        //    }
-        //}
+        else if (_targetUnit.player != BattleSystem.Instance.curPlayer
+                && TileManager.Instance.activeUnit != null
+                && objectHit.GetComponent<AttackSector>())
+        {
+            _activeAim = _targetUnit.GetComponentInChildren<BeAim>();
+            _activeAim.LightAim(objectHit.parent.gameObject);
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                _activeAim.Attack(_activeAim, parent.gameObject);
+            }
+        }
     }
 }
+

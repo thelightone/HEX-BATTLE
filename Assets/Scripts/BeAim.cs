@@ -9,17 +9,17 @@ public class BeAim : MonoBehaviour
     [HideInInspector]
     public HexTile curHex;
 
-  
+
     public HexTile rightTop;
-   
+
     public HexTile right;
-   
+
     public HexTile rightBot;
-   
+
     public HexTile leftBot;
-   
+
     public HexTile left;
-   
+
     public HexTile leftTop;
 
     public GameObject rightTopPart;
@@ -45,7 +45,6 @@ public class BeAim : MonoBehaviour
 
     public void UpdateCoord()
     {
-        DislightAim(0);
 
         curHex = moveController.currentTile;
         int x = curHex.offsetCoord.x;
@@ -156,113 +155,6 @@ public class BeAim : MonoBehaviour
 
     }
 
-    public void LightAims()
-    {
-        UpdateCoord();
-
-        var range = TileManager.Instance.activeUnit.currentRange;
-
-        if (rightTop != null)
-        {
-            rightTopPart.transform.GetChild(0).gameObject.SetActive(true);
-            rightTopPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        if (right != null)
-        {
-            rightPart.transform.GetChild(0).gameObject.SetActive(true);
-            rightPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        if (rightBot != null)
-        {
-            rightBotPart.transform.GetChild(0).gameObject.SetActive(true);
-            rightBotPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        if (leftBot != null)
-        {
-            leftBotPart.transform.GetChild(0).gameObject.SetActive(true);
-            leftBotPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        if (left != null)
-        {
-            leftPart.transform.GetChild(0).gameObject.SetActive(true);
-            leftPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        if (leftTop != null)
-        {
-            leftTopPart.transform.GetChild(0).gameObject.SetActive(true);
-            leftTopPart.transform.GetChild(1).gameObject.SetActive(true);
-        }
-
-
-        if (rightTop != null)
-        {
-            if (rightTop.unitOn!= null)
-            {
-                if (rightTop.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    rightTopPart.transform.GetChild(0).gameObject.SetActive(true);
-                    rightTopPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-        if (right != null)
-        {
-            if (right.unitOn != null)
-            {
-                if (right.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    rightPart.transform.GetChild(0).gameObject.SetActive(true);
-                    rightPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-
-        if (rightBot != null)
-        {
-            if (rightBot.unitOn != null)
-            {
-                if (rightBot.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    rightBotPart.transform.GetChild(0).gameObject.SetActive(true);
-                    rightBotPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-        if (leftBot != null)
-        {
-            if (leftBot.unitOn != null)
-            {
-                if (leftBot.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    leftBotPart.transform.GetChild(0).gameObject.SetActive(true);
-                    leftBotPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-        if (left != null)
-        {
-            if (left.unitOn != null)
-            {
-                if (left.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    leftPart.transform.GetChild(0).gameObject.SetActive(true);
-                    leftPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-        if (leftTop != null)
-        {
-            if (leftTop.unitOn != null)
-            {
-                if (leftTop.unitOn.player != BattleSystem.Instance.curPlayer)
-                {
-                    leftTopPart.transform.GetChild(0).gameObject.SetActive(true);
-                    leftTopPart.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-    }
-
     public void DislightAim(int i)
     {
         rightTopPart.transform.GetChild(i).gameObject.SetActive(false);
@@ -273,13 +165,26 @@ public class BeAim : MonoBehaviour
         leftTopPart.transform.GetChild(i).gameObject.SetActive(false);
     }
 
-    public void Attack(BeAim beAim,GameObject sector)
+    public void Attack(BeAim beAim, GameObject sector)
     {
         foreach (var key in beAim.dict.Keys)
         {
             if (sector == key)
             {
                 TileManager.Instance.activeUnit.Move(beAim.dict[key]);
+            }
+        }
+    }
+
+    public void LightAim(GameObject selectSector)
+    {
+        if (dict.ContainsKey(selectSector))
+        {
+            if (TileManager.Instance.activeUnit.currentRange.Contains(dict[selectSector]))
+            {
+                DislightAim(1);
+                selectSector.transform.GetChild(1).gameObject.SetActive(true);
+                TileManager.Instance.Highlight(dict[selectSector]);
             }
         }
     }

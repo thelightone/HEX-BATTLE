@@ -98,6 +98,11 @@ public class UnitMoveController : MonoBehaviour
 
     public void Range(HexTile checkedHex)
     {
+        if (!currentRange.Contains(currentTile))
+        {
+            currentRange.Add(currentTile);
+        }
+
         foreach (var hex in checkedHex.neigh)
         {
             var range = Pathfinder.FindPath(currentTile, hex, false);
