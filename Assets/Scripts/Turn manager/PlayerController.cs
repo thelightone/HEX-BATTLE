@@ -6,6 +6,13 @@ using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     public List <UnitMoveController> units;
+    public Player player;
+
+    public enum Player
+    {
+        left,
+        right
+    }
 
     void Start()
     {
@@ -13,7 +20,6 @@ public class PlayerController : MonoBehaviour
         {
             unit.player = this;
         }
-
     }
 
     private void ReceiveDamage(float damage, float damageArmor, float damageVamp)

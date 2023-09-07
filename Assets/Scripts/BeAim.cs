@@ -171,7 +171,7 @@ public class BeAim : MonoBehaviour
         {
             if (sector == key)
             {
-                TileManager.Instance.activeUnit.Move(beAim.dict[key]);
+                TileManager.Instance.activeUnit.fightController.AttackMove(beAim.dict[key], curHex);
             }
         }
     }

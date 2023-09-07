@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static PlayerController;
 
 public class UnitMoveController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class UnitMoveController : MonoBehaviour
 
     public bool gotPath;
     public bool isMoving = false;
+    public int step = 0;
 
 
     
@@ -39,11 +41,16 @@ public class UnitMoveController : MonoBehaviour
 
         currentTile = startTile;
         currentTile.busy = true;
-
+        currentTile.unitOn = this;
         beAim.UpdateCoord();
+
+        if (player.player == Player.left)
+            transform.GetChild(0).transform.rotation = Quaternion.Euler(0, 90, 0);
+        else
+            transform.GetChild(0).transform.rotation = Quaternion.Euler(0, -90, 0);
     }
 
-    public void Move(HexTile destTile)
+    public void Move(HexTile destTile, HexTile enemy)
     {
         if (!isMoving && currentRange.Contains(destTile))
         {
@@ -57,24 +64,41 @@ public class UnitMoveController : MonoBehaviour
             currentPath = Pathfinder.FindPath(currentTile, destTile, true);
             currentPath.Add(currentTile);
             currentPath.Reverse();
-            StartCoroutine("Step");
+            StartCoroutine(Step(enemy));
         }
     }
 
-    private IEnumerator Step()
+    private IEnumerator Step(HexTile enemy)
     {
         while (currentTile != destTile2 && currentPath.Count > 1)
         {
-
+            step++;
+            float elapsedTime = 0;
+            float waitTime = 0.25f;
             currentTile = currentPath[0];
             nextTile = currentPath[1];
-
-            float elapsedTime = 0;
-            float waitTime = 0.5f;
+            
             var startPoint = transform.position;
+            var startRot = transform.GetChild(0).transform.rotation;
+
+            Vector3 relativePos = new Vector3(nextTile.transform.position.x, 0, nextTile.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
+            var targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+
+          
+            while (elapsedTime < waitTime && step>1)
+            {
+                transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+
+            elapsedTime = 0;
+            waitTime = 0.5f;
 
             while (elapsedTime < waitTime)
-            {
+            {              
                 transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), (elapsedTime / waitTime));
                 elapsedTime += Time.deltaTime;
 
@@ -83,6 +107,27 @@ public class UnitMoveController : MonoBehaviour
 
 
             currentPath.RemoveAt(0);
+        }
+
+        if (enemy!=null)
+        {
+            float elapsedTime = 0;
+            float waitTime = 0.25f;
+
+            var startRot = transform.GetChild(0).transform.rotation;
+
+            Vector3 relativePos = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
+
+            var targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+
+            while (elapsedTime < waitTime && transform.GetChild(0).transform.rotation != targRot)
+            {
+                transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+            fightController.DoDamage(enemy);
         }
 
         choose.SetActive(false);
@@ -94,6 +139,7 @@ public class UnitMoveController : MonoBehaviour
         isMoving = false;
         beAim.UpdateCoord();
         BattleSystem.Instance.OnAct();
+        step = 0;
     }
 
     public void Range(HexTile checkedHex)

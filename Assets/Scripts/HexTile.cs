@@ -25,17 +25,23 @@ public class HexTile : MonoBehaviour
 
     public void Highlight()
     {
-        if ( !TileManager.Instance.activeUnit.isMoving)
+        if (!TileManager.Instance.activeUnit.isMoving)
         {
             if (!busy && TileManager.Instance.activeUnit.currentRange.Contains(this))
                 TileManager.Instance.Highlight(this);
             else
                 TileManager.Instance.Busy(this);
         }
-        }
-
-        public void Select()
-        {
-            TileManager.Instance.Select(this);
-        }
     }
+
+    public void Select()
+    {
+        TileManager.Instance.Select(this);
+    }
+
+    public void MakeFree()
+    {
+        busy = false;
+        unitOn = null;
+    }
+}

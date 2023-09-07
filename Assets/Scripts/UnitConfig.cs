@@ -1,3 +1,4 @@
+using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Data/UnitConfig", order = 51)]
@@ -16,11 +17,12 @@ public class UnitConfig : ScriptableObject
     public int numberUnits;
 
     public SkillParent[] skills;
-    public Mesh mesh;
+    //public Mesh mesh;
 
-    public Animator animator;
+    //public AnimatorController animator;
 
     public Race race;
+    public GameObject model;
 
     public enum Race
     {

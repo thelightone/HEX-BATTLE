@@ -35,25 +35,9 @@ public class CameraRaycast : MonoBehaviour
             {
                 HighlightUnit(parent);
             }
-
-            //else if (objectHit.GetComponent<AttackSector>())
-            //{
-            //    _activeAim = objectHit.GetComponentInParent<BeAim>();
-
-            //    if (TileManager.Instance.activeUnit != null && _activeAim.moveController.player!= BattleSystem.Instance.curPlayer)
-            //    {                    
-            //        _activeAim.LightAims();
-
-            //        if (Input.GetMouseButtonUp(0))
-            //        {
-            //            _activeAim.Attack(_activeAim,parent.gameObject);
-            //        }
-            //    }
-            //}
             else
             {
                 TileManager.Instance.DisLightUnit();
-                _activeAim?.UpdateCoord();
                 _activeAim?.DislightAim(1);
 
                 if (TileManager.Instance.activeUnit != null && parent.GetComponent<HexTile>())

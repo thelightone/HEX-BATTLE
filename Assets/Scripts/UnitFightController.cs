@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 using static UnitConfig;
 
@@ -24,9 +25,11 @@ public class UnitFightController : MonoBehaviour
     public int numberUnits;
 
     public SkillParent[] skills;
-    public Mesh mesh;
 
-    public Animator animator;
+    public GameObject model;
+    //public Mesh mesh;
+
+    //public AnimatorController animator;
     public Race race;
 
 
@@ -36,22 +39,41 @@ public class UnitFightController : MonoBehaviour
 
         health = unitConfig.health;
         maxHealth = unitConfig.health;
-        damage =unitConfig.damage;
+        damage = unitConfig.damage;
         armor = unitConfig.armor;
         goRange = unitConfig.goRange;
         missChance = unitConfig.missChance;
-        vamp =unitConfig.vamp;
-        melee=unitConfig.melee;
-        cost= unitConfig.cost;
-        numberUnits= unitConfig.numberUnits;
+        vamp = unitConfig.vamp;
+        melee = unitConfig.melee;
+        cost = unitConfig.cost;
+        numberUnits = unitConfig.numberUnits;
         skills = unitConfig.skills;
-        mesh = unitConfig.mesh;
-        animator = unitConfig.animator;
         race = unitConfig.race;
-
-        gameObject.transform.GetChild(0).GetComponent<MeshFilter>().mesh = mesh;
+        model = Instantiate(unitConfig.model, transform.position- new Vector3 (0,0.95f,0), transform.rotation, gameObject.transform);
+        model.transform.SetAsFirstSibling();
     }
 
-    
+    public void AttackMove(HexTile destTile, HexTile target)
+    {
+        moveController.Move(destTile, target);
+    }
+
+    public void DoDamage(HexTile target)
+    {
+        var enemy = target.unitOn.fightController;
+        enemy.Death();
+    }
+
+    public void ReceiveDamage()
+    {
+        Death();
+    }
+
+    public void Death()
+    {
+        gameObject.SetActive(false);
+        moveController.currentTile.MakeFree();
+    }
+
 }
 

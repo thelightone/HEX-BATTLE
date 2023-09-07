@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -172,6 +172,7 @@ MonoBehaviour:
   cubeCoord: {x: 1, y: 2, z: -3}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &25410942
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +222,7 @@ MonoBehaviour:
   cubeCoord: {x: 3, y: 0, z: -3}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &35914097
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +272,7 @@ MonoBehaviour:
   cubeCoord: {x: 1, y: 3, z: -4}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &39221136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1724,6 +1727,7 @@ MonoBehaviour:
   cubeCoord: {x: 0, y: 2, z: -2}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &312482129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,6 +1992,7 @@ MonoBehaviour:
   cubeCoord: {x: -1, y: 4, z: -3}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &334191630
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,6 +2309,7 @@ MonoBehaviour:
   cubeCoord: {x: 2, y: 3, z: -5}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &385520840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2668,6 +2674,7 @@ MonoBehaviour:
   cubeCoord: {x: 2, y: 2, z: -4}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &445002339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2717,6 +2724,7 @@ MonoBehaviour:
   cubeCoord: {x: 1, y: 1, z: -2}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &511389428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,7 +2844,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.39
+  orthographic size: 3.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2860,13 +2868,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5358268, y: 0, z: 0, w: 0.8443279}
-  m_LocalPosition: {x: 2.95, y: 3.58, z: -3}
+  m_LocalRotation: {x: 0.49515536, y: 0, z: 0, w: 0.86880445}
+  m_LocalPosition: {x: 1.9, y: 3.95, z: -3.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 64.8, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 59.36, y: 0, z: 0}
 --- !u!114 &519420033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3544,6 +3552,7 @@ MonoBehaviour:
   cubeCoord: {x: 1, y: 4, z: -5}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &631100121
 GameObject:
   m_ObjectHideFlags: 0
@@ -3919,6 +3928,7 @@ MonoBehaviour:
   cubeCoord: {x: 0, y: 3, z: -3}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &686809153
 GameObject:
   m_ObjectHideFlags: 0
@@ -4459,10 +4469,22 @@ PrefabInstance:
       propertyPath: unitConfig
       value: 
       objectReference: {fileID: 11400000, guid: 1d9077b0b7e594fd78b813ba6adac5d5, type: 2}
+    - target: {fileID: 443462496305792073, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 934926491627921548, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e50ece9d86e18435dadc4a84634ef585, type: 2}
+    - target: {fileID: 2306153818593189785, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e50ece9d86e18435dadc4a84634ef585, type: 2}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1809856072}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: startTile
       value: 
@@ -4573,6 +4595,7 @@ MonoBehaviour:
   cubeCoord: {x: 3, y: 1, z: -4}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &813292911
 GameObject:
   m_ObjectHideFlags: 0
@@ -4812,19 +4835,19 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.96
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize: 11.6
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.04
-    m_NormalBias: 0
-    m_NearPlane: 0.1
+    m_Strength: 0.6
+    m_Bias: 0.84
+    m_NormalBias: 0.15
+    m_NearPlane: 2.05
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -4870,13 +4893,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846107044}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.49240404, y: -0.49240375, z: 0.413176, w: 0.586824}
+  m_LocalRotation: {x: 0.81425464, y: 0.15687965, z: -0.25751513, w: 0.49604842}
   m_LocalPosition: {x: -15.06, y: -1.7483001, z: 0.051683005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -280, y: -440, z: 0}
+  m_LocalEulerAnglesHint: {x: -242.7, y: -324.9, z: 0}
 --- !u!1 &850051406
 GameObject:
   m_ObjectHideFlags: 0
@@ -5136,6 +5159,7 @@ MonoBehaviour:
   cubeCoord: {x: -1, y: 1, z: 0}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &894624977
 GameObject:
   m_ObjectHideFlags: 0
@@ -5185,6 +5209,7 @@ MonoBehaviour:
   cubeCoord: {x: 4, y: 0, z: -4}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &902104837
 GameObject:
   m_ObjectHideFlags: 0
@@ -5501,6 +5526,7 @@ MonoBehaviour:
   cubeCoord: {x: 0, y: 1, z: -1}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1009477467
 GameObject:
   m_ObjectHideFlags: 0
@@ -5696,6 +5722,7 @@ MonoBehaviour:
   cubeCoord: {x: -2, y: 4, z: -2}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!4 &1069028701
 Transform:
   m_ObjectHideFlags: 0
@@ -6686,14 +6713,22 @@ PrefabInstance:
       propertyPath: unitConfig
       value: 
       objectReference: {fileID: 11400000, guid: 1d9077b0b7e594fd78b813ba6adac5d5, type: 2}
+    - target: {fileID: 443462496305792073, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 934926491627921548, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 86f849452509cab4da6682e0a0ecc694, type: 2}
+      objectReference: {fileID: 2100000, guid: 5bcbb9eb90453436db2297b7667ae046, type: 2}
+    - target: {fileID: 2306153818593189785, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5bcbb9eb90453436db2297b7667ae046, type: 2}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1555480326}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: startTile
       value: 
@@ -6861,6 +6896,7 @@ MonoBehaviour:
   cubeCoord: {x: 1, y: 0, z: -1}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1190461818
 GameObject:
   m_ObjectHideFlags: 0
@@ -7624,6 +7660,7 @@ MonoBehaviour:
   cubeCoord: {x: 2, y: 1, z: -3}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1355991533
 GameObject:
   m_ObjectHideFlags: 0
@@ -7883,6 +7920,7 @@ MonoBehaviour:
   cubeCoord: {x: -2, y: 3, z: -1}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1465615031
 GameObject:
   m_ObjectHideFlags: 0
@@ -9485,6 +9523,7 @@ MonoBehaviour:
   units:
   - {fileID: 1821615828}
   - {fileID: 741039491}
+  player: 1
 --- !u!4 &1555480327
 Transform:
   m_ObjectHideFlags: 0
@@ -9549,6 +9588,7 @@ MonoBehaviour:
   cubeCoord: {x: 2, y: 0, z: -2}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1563779799
 GameObject:
   m_ObjectHideFlags: 0
@@ -9865,6 +9905,7 @@ MonoBehaviour:
   cubeCoord: {x: 2, y: 4, z: -6}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1604606156
 GameObject:
   m_ObjectHideFlags: 0
@@ -9971,6 +10012,7 @@ MonoBehaviour:
   cubeCoord: {x: -1, y: 2, z: -1}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1625284464
 GameObject:
   m_ObjectHideFlags: 0
@@ -10832,14 +10874,22 @@ PrefabInstance:
       propertyPath: unitConfig
       value: 
       objectReference: {fileID: 11400000, guid: 9ac1e897c875c4dbc8682835ea12d5b7, type: 2}
+    - target: {fileID: 443462496305792073, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 934926491627921548, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 86f849452509cab4da6682e0a0ecc694, type: 2}
+      objectReference: {fileID: 2100000, guid: 5bcbb9eb90453436db2297b7667ae046, type: 2}
+    - target: {fileID: 2306153818593189785, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5bcbb9eb90453436db2297b7667ae046, type: 2}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1555480326}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: startTile
       value: 
@@ -11248,6 +11298,7 @@ MonoBehaviour:
   units:
   - {fileID: 99609600}
   - {fileID: 105261921}
+  player: 0
 --- !u!4 &1809856073
 Transform:
   m_ObjectHideFlags: 0
@@ -11312,6 +11363,7 @@ MonoBehaviour:
   cubeCoord: {x: 0, y: 0, z: 0}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1818603862
 GameObject:
   m_ObjectHideFlags: 0
@@ -11582,6 +11634,7 @@ MonoBehaviour:
   cubeCoord: {x: 0, y: 4, z: -4}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1855903674
 GameObject:
   m_ObjectHideFlags: 0
@@ -11946,6 +11999,7 @@ MonoBehaviour:
   cubeCoord: {x: -1, y: 3, z: -2}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &1917262586
 GameObject:
   m_ObjectHideFlags: 0
@@ -12865,6 +12919,7 @@ MonoBehaviour:
   cubeCoord: {x: 3, y: 2, z: -5}
   neigh: []
   busy: 0
+  unitOn: {fileID: 0}
 --- !u!1 &2118741119
 GameObject:
   m_ObjectHideFlags: 0
@@ -13048,6 +13103,18 @@ PrefabInstance:
       propertyPath: unitConfig
       value: 
       objectReference: {fileID: 11400000, guid: 9ac1e897c875c4dbc8682835ea12d5b7, type: 2}
+    - target: {fileID: 443462496305792073, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 934926491627921548, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e50ece9d86e18435dadc4a84634ef585, type: 2}
+    - target: {fileID: 2306153818593189785, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e50ece9d86e18435dadc4a84634ef585, type: 2}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: mesh
       value: 
@@ -13055,7 +13122,7 @@ PrefabInstance:
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1809856072}
     - target: {fileID: 2727523493836568080, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
       propertyPath: startTile
       value: 
@@ -13112,6 +13179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7532160694480145340, guid: 4e2f93ebcac87c14f812e854d9a1b553, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e50ece9d86e18435dadc4a84634ef585, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

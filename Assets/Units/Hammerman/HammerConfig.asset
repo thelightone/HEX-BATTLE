@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43a01d9d07e4b4830a6e0c71879903e8, type: 3}
-  m_Name: CapsuleConfig
+  m_Name: HammerConfig
   m_EditorClassIdentifier: 
   health: 1
   damage: 1
@@ -22,5 +22,5 @@ MonoBehaviour:
   cost: 1
   numberUnits: 1
   skills: []
-  mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-  animator: {fileID: 0}
+  race: 0
+  model: {fileID: 8227859927544300575, guid: d6ee29d010773417697b1d6945e661b4, type: 3}

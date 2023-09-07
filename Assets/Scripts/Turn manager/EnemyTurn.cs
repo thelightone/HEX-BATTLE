@@ -22,8 +22,7 @@ public class EnemyTurn : State
     {
         actions++;
         if (actions > 1)
-        {
-            
+        {            
             BattleSystem.SetState(new NewRound(BattleSystem));
         }
 

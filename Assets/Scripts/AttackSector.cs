@@ -10,9 +10,4 @@ public class AttackSector : MonoBehaviour
     {
         beAim = GetComponentInParent<BeAim>();
     }
-
-    //public void OnMouseDown()
-    //{
-    //    beAim.Attack(gameObject);  
-    //}
 }
