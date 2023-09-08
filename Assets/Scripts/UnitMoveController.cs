@@ -106,15 +106,15 @@ public class UnitMoveController : MonoBehaviour
 
             animator.ResetTrigger("Stop");
             //ROTATE
-            while (elapsedTime < waitTime && step == 2 && Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(targRot.eulerAngles.y))
-            {
-                animator.SetTrigger("Turn");
-                transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
-                elapsedTime += Time.deltaTime;
+            //while (elapsedTime < waitTime && step == 2 && Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(targRot.eulerAngles.y))
+            //{
+            //    //animator.SetFloat("TurnBlend",1f);
+            //    //transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
+            //    elapsedTime += Time.deltaTime;
 
-                yield return null;
-            }
-            animator.ResetTrigger("Turn");
+            //    yield return null;
+            //}
+            //animator.SetFloat("TurnBlend", 0.0f);
 
             //MOVE
             elapsedTime = 0;
@@ -125,9 +125,16 @@ public class UnitMoveController : MonoBehaviour
             {
                 smoothProgress = elapsedTime / waitTime;
 
-                if (step > 1 && !oneStep)
+
+                if (step == 2)
                 {
-                     animator.SetTrigger("Run");
+                    var diff = Convert.ToInt32(targRot.eulerAngles.y) - Convert.ToInt32(startRot.eulerAngles.y);
+                    animator.SetFloat("TurnBlend", diff/10);
+                }
+
+                    if (step > 1 && !oneStep)
+                {
+                    animator.SetTrigger("Run");
                 }
 
 
@@ -141,13 +148,15 @@ public class UnitMoveController : MonoBehaviour
                         smoothProgress = SmoothStart(smoothProgress);
                     }
                     transform.position = Bezier(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), currentPath[2].transform.position + new Vector3(0, 1, 0), smoothProgress / 2);
-                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress ));
+                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress));
                 }
                 else
                 {
-               
+
                     if (step > 1)
+                    {
                         transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (smoothProgress));
+                    }
                     if (step == 2)
                     {
                         waitTime = 1f;
@@ -268,14 +277,14 @@ public class UnitMoveController : MonoBehaviour
     private float SmoothEnd(float progress)
     {
         progress = Mathf.Lerp(0, 1, progress);
-        progress = -1*(progress-1) * (progress-1)* (progress - 1)* (progress - 1) + 1;
+        progress = -1 * (progress - 1) * (progress - 1) * (progress - 1) * (progress - 1) + 1;
 
         return progress;
     }
 
     private float SmoothStep(float progress)
     {
-       
+
         return progress;
     }
     private Vector3 Bezier(Vector3 a, Vector3 b, Vector3 c, float progress)
