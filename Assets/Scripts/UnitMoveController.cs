@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 using static PlayerController;
 
@@ -26,13 +28,14 @@ public class UnitMoveController : MonoBehaviour
     public bool isMoving = false;
     public int step = 0;
 
+    public Animator animator;
 
-    
 
     private void Start()
     {
         fightController = GetComponent<UnitFightController>();
         beAim = GetComponentInChildren<BeAim>();
+        animator = GetComponentInChildren<Animator>();
 
         gameObject.transform.position = startTile.transform.position + new Vector3(0, 1, 0);
 
@@ -70,55 +73,126 @@ public class UnitMoveController : MonoBehaviour
 
     private IEnumerator Step(HexTile enemy)
     {
+        float elapsedTime;
+        float waitTime;
+        Vector3 startPoint;
+        Quaternion startRot;
+        Vector3 relativePos;
+        Vector3 relativePos2;
+        Quaternion targRot;
+        Quaternion afterTargRot;
+        float smoothProgress;
+        bool oneStep = currentPath.Count == 3 ? true : false;
+
         while (currentTile != destTile2 && currentPath.Count > 1)
         {
             step++;
-            float elapsedTime = 0;
-            float waitTime = 0.25f;
+            elapsedTime = 0;
+            waitTime = 0.5f;
             currentTile = currentPath[0];
             nextTile = currentPath[1];
-            
-            var startPoint = transform.position;
-            var startRot = transform.GetChild(0).transform.rotation;
 
-            Vector3 relativePos = new Vector3(nextTile.transform.position.x, 0, nextTile.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
-            var targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+            startPoint = transform.position;
+            startRot = transform.GetChild(0).transform.rotation;
+            relativePos = new Vector3(nextTile.transform.position.x, 0, nextTile.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
+            targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+            afterTargRot = startRot;
 
-          
-            while (elapsedTime < waitTime && step>1)
+            if (currentPath.Count > 2 && step > 1)
             {
+                relativePos2 = new Vector3(currentPath[2].transform.position.x, 0, currentPath[2].transform.position.z) - new Vector3(nextTile.transform.position.x, 0, nextTile.transform.position.z);
+                afterTargRot = Quaternion.LookRotation(relativePos2, Vector3.up);
+            }
+
+            animator.ResetTrigger("Stop");
+            //ROTATE
+            while (elapsedTime < waitTime && step == 2 && Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(targRot.eulerAngles.y))
+            {
+                animator.SetTrigger("Turn");
                 transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
                 elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
+            animator.ResetTrigger("Turn");
 
-
+            //MOVE
             elapsedTime = 0;
-            waitTime = 0.5f;
+
+            startRot = transform.GetChild(0).transform.rotation;
 
             while (elapsedTime < waitTime)
-            {              
-                transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), (elapsedTime / waitTime));
+            {
+                smoothProgress = elapsedTime / waitTime;
+
+                if (step > 1 && !oneStep)
+                {
+                     animator.SetTrigger("Run");
+                }
+
+
+
+                if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
+                {
+                    waitTime = 0.5f;
+                    if (step == 2)
+                    {
+                        waitTime = 1f;
+                        smoothProgress = SmoothStart(smoothProgress);
+                    }
+                    transform.position = Bezier(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), currentPath[2].transform.position + new Vector3(0, 1, 0), smoothProgress / 2);
+                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress ));
+                }
+                else
+                {
+               
+                    if (step > 1)
+                        transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (smoothProgress));
+                    if (step == 2)
+                    {
+                        waitTime = 1f;
+                        smoothProgress = SmoothStart(smoothProgress);
+                    }
+                    if (oneStep && step == 2)
+                    {
+                        animator.SetTrigger("Step");
+                        waitTime = 1f;
+                        smoothProgress = SmoothEnd(smoothProgress);
+                    }
+                    if (step != 2 && !oneStep && currentPath.Count == 2)
+                    {
+                        waitTime = 1.5f;
+                        smoothProgress = SmoothEnd(smoothProgress);
+                        animator.ResetTrigger("Run");
+                        animator.SetTrigger("Stop");
+                    }
+
+                    transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), (smoothProgress));
+                }
                 elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
-
-
+            //if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
+            //currentPath.RemoveAt(0);
             currentPath.RemoveAt(0);
+            animator.ResetTrigger("Step");
+            animator.ResetTrigger("Run");
+            animator.SetTrigger("Stop");
         }
 
-        if (enemy!=null)
+
+        if (enemy != null)
         {
-            float elapsedTime = 0;
-            float waitTime = 0.25f;
+            animator.SetTrigger("Turn");
+            elapsedTime = 0;
+            waitTime = 0.5f;
 
-            var startRot = transform.GetChild(0).transform.rotation;
+            startRot = transform.GetChild(0).transform.rotation;
 
-            Vector3 relativePos = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
+            relativePos = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
 
-            var targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+            targRot = Quaternion.LookRotation(relativePos, Vector3.up);
 
             while (elapsedTime < waitTime && transform.GetChild(0).transform.rotation != targRot)
             {
@@ -127,6 +201,10 @@ public class UnitMoveController : MonoBehaviour
 
                 yield return null;
             }
+
+            animator.ResetTrigger("Turn");
+            animator.SetTrigger("Stop");
+
             fightController.DoDamage(enemy);
         }
 
@@ -180,5 +258,32 @@ public class UnitMoveController : MonoBehaviour
         currentRange.Clear();
     }
 
+    private float SmoothStart(float progress)
+    {
+        progress = Mathf.Lerp(0, 1, progress);
+        progress = progress * progress;
+        return progress;
+    }
+
+    private float SmoothEnd(float progress)
+    {
+        progress = Mathf.Lerp(0, 1, progress);
+        progress = -1*(progress-1) * (progress-1)* (progress - 1)* (progress - 1) + 1;
+
+        return progress;
+    }
+
+    private float SmoothStep(float progress)
+    {
+       
+        return progress;
+    }
+    private Vector3 Bezier(Vector3 a, Vector3 b, Vector3 c, float progress)
+    {
+        var ab = Vector3.Lerp(a, b, progress);
+        var bc = Vector3.Lerp(b, c, progress);
+        var abc = Vector3.Lerp(ab, bc, progress);
+        return abc;
+    }
 }
 
