@@ -105,6 +105,7 @@ public class UnitMoveController : MonoBehaviour
             }
 
             animator.ResetTrigger("Stop");
+
             //ROTATE
             //while (elapsedTime < waitTime && step == 2 && Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(targRot.eulerAngles.y))
             //{
@@ -124,31 +125,36 @@ public class UnitMoveController : MonoBehaviour
             while (elapsedTime < waitTime)
             {
                 smoothProgress = elapsedTime / waitTime;
-
+                waitTime = 0.4f;
 
                 if (step == 2)
                 {
                     var diff = Convert.ToInt32(targRot.eulerAngles.y) - Convert.ToInt32(startRot.eulerAngles.y);
-                    animator.SetFloat("TurnBlend", diff/10);
+                    animator.SetFloat("TurnBlend", diff / 10);
                 }
 
-                    if (step > 1 && !oneStep)
+                if (step > 1 && !oneStep)
                 {
                     animator.SetTrigger("Run");
                 }
 
 
 
-                if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
+                if (Math.Abs(Convert.ToInt32(startRot.eulerAngles.y) - Convert.ToInt32(afterTargRot.eulerAngles.y))>20 && currentPath.Count > 2 && step > 1)
                 {
-                    waitTime = 0.5f;
+                    waitTime = 0.4f;
                     if (step == 2)
                     {
                         waitTime = 1f;
                         smoothProgress = SmoothStart(smoothProgress);
+                        
                     }
-                    transform.position = Bezier(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), currentPath[2].transform.position + new Vector3(0, 1, 0), smoothProgress / 2);
+          
+                    transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), currentPath[2].transform.position + new Vector3(0, 1, 0), smoothProgress / 2);
+                   // waitTime *= 2;
                     transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress));
+                   // waitTime /= 2;
+                    Debug.Log(waitTime + " " + step);
                 }
                 else
                 {
@@ -160,17 +166,18 @@ public class UnitMoveController : MonoBehaviour
                     if (step == 2)
                     {
                         waitTime = 1f;
-                        smoothProgress = SmoothStart(smoothProgress);
+                        smoothProgress = SmoothStart(smoothProgress);                      
                     }
                     if (oneStep && step == 2)
                     {
                         animator.SetTrigger("Step");
                         waitTime = 1f;
                         smoothProgress = SmoothEnd(smoothProgress);
+                       
                     }
                     if (step != 2 && !oneStep && currentPath.Count == 2)
                     {
-                        waitTime = 1.5f;
+                        waitTime = 1f;
                         smoothProgress = SmoothEnd(smoothProgress);
                         animator.ResetTrigger("Run");
                         animator.SetTrigger("Stop");
@@ -179,7 +186,6 @@ public class UnitMoveController : MonoBehaviour
                     transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), (smoothProgress));
                 }
                 elapsedTime += Time.deltaTime;
-
                 yield return null;
             }
             //if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
@@ -277,7 +283,7 @@ public class UnitMoveController : MonoBehaviour
     private float SmoothEnd(float progress)
     {
         progress = Mathf.Lerp(0, 1, progress);
-        progress = -1 * (progress - 1) * (progress - 1) * (progress - 1) * (progress - 1) + 1;
+        progress = -1 * (progress - 1) * (progress - 1)  + 1;
 
         return progress;
     }
@@ -294,5 +300,22 @@ public class UnitMoveController : MonoBehaviour
         var abc = Vector3.Lerp(ab, bc, progress);
         return abc;
     }
-}
 
+    private Vector3 CubicSpline(Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    {
+        float t2 = t * t;
+        float t3 = t2 * t;
+        float oneMinusT = 1 - t;
+        float oneMinusT2 = oneMinusT * oneMinusT;
+        float oneMinusT3 = oneMinusT2 * oneMinusT;
+
+        Vector3 interpolatedPoint =
+            oneMinusT3 * p1 +
+            (3 * oneMinusT2 * t) * p2 +
+            (3 * oneMinusT * t2) * p3 +
+            t3 * p2; // Здесь используется p2 в качестве четвертой точки
+
+        return interpolatedPoint;
+    }
+
+}
