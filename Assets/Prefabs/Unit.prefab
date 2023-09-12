@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 312b5b8c3a7d2334b8b5c1c6f7255967, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -554,7 +554,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 312b5b8c3a7d2334b8b5c1c6f7255967, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -789,6 +789,7 @@ MonoBehaviour:
   gotPath: 0
   isMoving: 0
   step: 0
+  animator: {fileID: 0}
 --- !u!114 &-2389922117636548514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,6 +804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveController: {fileID: 0}
   unitConfig: {fileID: 0}
+  enemy: {fileID: 0}
   maxHealth: 0
   health: 0
   damage: 0

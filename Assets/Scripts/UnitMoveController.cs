@@ -37,7 +37,8 @@ public class UnitMoveController : MonoBehaviour
         beAim = GetComponentInChildren<BeAim>();
         animator = GetComponentInChildren<Animator>();
 
-        gameObject.transform.position = startTile.transform.position + new Vector3(0, 1, 0);
+        gameObject.transform.position = startTile.transform.position + new Vector3(0, 1.1f, 0);
+
 
         choose.SetActive(false);
         active.SetActive(false);
@@ -150,10 +151,10 @@ public class UnitMoveController : MonoBehaviour
                         
                     }
           
-                    transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), currentPath[2].transform.position + new Vector3(0, 1, 0), smoothProgress / 2);
-                   // waitTime *= 2;
+                    transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1.1f, 0), currentPath[2].transform.position + new Vector3(0, 1.1f, 0), smoothProgress / 2);
+                    waitTime *= 4;
                     transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress));
-                   // waitTime /= 2;
+                    waitTime /= 4;
                     Debug.Log(waitTime + " " + step);
                 }
                 else
@@ -183,7 +184,7 @@ public class UnitMoveController : MonoBehaviour
                         animator.SetTrigger("Stop");
                     }
 
-                    transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1, 0), (smoothProgress));
+                    transform.position = Vector3.Lerp(startPoint, nextTile.transform.position + new Vector3(0, 1.1f, 0), (smoothProgress));
                 }
                 elapsedTime += Time.deltaTime;
                 yield return null;
