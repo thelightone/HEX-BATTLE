@@ -4,14 +4,14 @@ using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using static UnitConfig;
+using DissolveExample;
 
 public class UnitFightController : MonoBehaviour
 {
     public UnitMoveController moveController;
-
     public UnitConfig unitConfig;
-
     public UnitFightController enemy;
+    public DissolveChilds effects;
 
     public int maxHealth;
     public int health;
@@ -37,7 +37,7 @@ public class UnitFightController : MonoBehaviour
 
     private void Start()
     {
-        moveController = GetComponent<UnitMoveController>();
+        moveController = GetComponent<UnitMoveController>();       
 
         health = unitConfig.health;
         maxHealth = unitConfig.health;
@@ -53,6 +53,7 @@ public class UnitFightController : MonoBehaviour
         race = unitConfig.race;
         model = Instantiate(unitConfig.model, transform.position- new Vector3 (0,0.95f,0), transform.rotation, gameObject.transform);
         model.transform.SetAsFirstSibling();
+        effects = GetComponentInChildren<DissolveChilds>();
     }
 
     public void AttackMove(HexTile destTile, HexTile target)
@@ -79,7 +80,10 @@ public class UnitFightController : MonoBehaviour
     public IEnumerator Death()
     {
         moveController.animator.SetTrigger("Death");
-        yield return new WaitForSeconds(4);
+        moveController.currentTile.MakeFree();
+        yield return new WaitForSeconds(2);
+        effects.ResetAndStart();
+        yield return new WaitForSeconds(6);
         gameObject.SetActive(false);
         moveController.currentTile.MakeFree();
     }

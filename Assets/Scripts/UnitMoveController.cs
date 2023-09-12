@@ -174,7 +174,8 @@ public class UnitMoveController : MonoBehaviour
                         animator.SetTrigger("Step");
                         waitTime = 1f;
                         smoothProgress = SmoothEnd(smoothProgress);
-                       
+                        animator.SetTrigger("Stop");
+
                     }
                     if (step != 2 && !oneStep && currentPath.Count == 2)
                     {
@@ -191,10 +192,10 @@ public class UnitMoveController : MonoBehaviour
             }
             //if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
             //currentPath.RemoveAt(0);
-            currentPath.RemoveAt(0);
             animator.ResetTrigger("Step");
             animator.ResetTrigger("Run");
             animator.SetTrigger("Stop");
+            currentPath.RemoveAt(0);
         }
 
 
