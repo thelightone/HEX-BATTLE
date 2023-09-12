@@ -11,6 +11,8 @@ public class UnitFightController : MonoBehaviour
 
     public UnitConfig unitConfig;
 
+    public UnitFightController enemy;
+
     public int maxHealth;
     public int health;
     public int damage;
@@ -58,19 +60,26 @@ public class UnitFightController : MonoBehaviour
         moveController.Move(destTile, target);
     }
 
-    public void DoDamage(HexTile target)
+    public void StartFight(HexTile target)
     {
-        var enemy = target.unitOn.fightController;
-        enemy.Death();
+        moveController.animator.SetTrigger("Attack");
+        enemy = target.unitOn.fightController;
+    }
+
+    public void Hit()
+    {
+        enemy.ReceiveDamage();
     }
 
     public void ReceiveDamage()
     {
-        Death();
+        StartCoroutine("Death");
     }
 
-    public void Death()
+    public IEnumerator Death()
     {
+        moveController.animator.SetTrigger("Death");
+        yield return new WaitForSeconds(4);
         gameObject.SetActive(false);
         moveController.currentTile.MakeFree();
     }

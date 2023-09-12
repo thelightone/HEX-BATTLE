@@ -199,7 +199,7 @@ public class UnitMoveController : MonoBehaviour
 
         if (enemy != null)
         {
-            animator.SetTrigger("Turn");
+            animator.SetTrigger("Step");
             elapsedTime = 0;
             waitTime = 0.5f;
 
@@ -217,10 +217,10 @@ public class UnitMoveController : MonoBehaviour
                 yield return null;
             }
 
-            animator.ResetTrigger("Turn");
+            animator.ResetTrigger("Step");
             animator.SetTrigger("Stop");
 
-            fightController.DoDamage(enemy);
+            fightController.StartFight(enemy);
         }
 
         choose.SetActive(false);
