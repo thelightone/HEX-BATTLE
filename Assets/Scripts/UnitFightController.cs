@@ -81,7 +81,7 @@ public class UnitFightController : MonoBehaviour
     {
         moveController.animator.SetTrigger("Death");
         moveController.currentTile.MakeFree();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
         effects.ResetAndStart();
         yield return new WaitForSeconds(6);
         gameObject.SetActive(false);
