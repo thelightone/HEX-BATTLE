@@ -52,10 +52,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Dissolve: 0.34
-    - _EdgeColorIntensity: 1.12
+    - _EdgeColorIntensity: 1.5
     - _EdgeWidth: 0.06
     - _Metallic: 0
-    - _NoiseScale: 50.31
+    - _NoiseScale: 59.8
     - _NormalScale: 1
     - _OcclusionStrength: 1
     - _QueueControl: 0

@@ -9,7 +9,9 @@ public class UnitConfig : ScriptableObject
     public int armor;
     public int goRange;
 
-    public int missChance;
+    public float missAbil;
+    public float critChance;
+    public float critModif;
     public int vamp;
     public bool melee;
 
