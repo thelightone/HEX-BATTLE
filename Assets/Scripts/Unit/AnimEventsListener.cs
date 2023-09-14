@@ -14,4 +14,8 @@ public class AnimEventsListener : MonoBehaviour
     {
         unit.Hit();
     }
+    public void PreHit()
+    {
+        unit.PreHit();
+    }
 }

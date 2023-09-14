@@ -95,6 +95,11 @@ public class UnitFightController : MonoBehaviour
             enemy.ReceiveDamage(CheckCritDamage());
     }
 
+    public void PreHit()
+    {
+        enemy.moveController.animator.SetTrigger("Block");
+    }
+
     public void ReceiveDamage(float hitDamage)
     {
         if (Dodge())
@@ -111,6 +116,7 @@ public class UnitFightController : MonoBehaviour
         {
             StartCoroutine("Death");
         }
+
     }
 
     public IEnumerator Death()
@@ -137,6 +143,12 @@ public class UnitFightController : MonoBehaviour
     public void Vampirism(float hitDamage)
     {
         health += hitDamage * vamp / 100;
+    }
+
+    private IEnumerator DisTrigger(string trigger)
+    {
+        yield return new WaitForSeconds(0.1f);
+        moveController.animator.ResetTrigger("Death");
     }
 }
 
