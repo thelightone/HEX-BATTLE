@@ -5,30 +5,30 @@ using UnityEditor.Animations;
 using UnityEngine;
 using static UnitConfig;
 using DissolveExample;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 public class UnitFightController : MonoBehaviour
 {
     public UnitMoveController moveController;
     public UnitConfig unitConfig;
     public UnitFightController enemy;
-    public DissolveChilds effects;
+    public DissolveChilds effectDeath;
+    public ParticleSystem sparks;
 
     public delegate void HealthChangedDelegate(float newHealth);
     public event HealthChangedDelegate HealthChanged;
 
     public float maxHealth;
     private float _health;
-    public float health 
+    public float health
     {
-        get { return _health; } 
-        set 
-        { 
-            if (value < 0) 
+        get { return _health; }
+        set
+        {
+            if (value < 0)
                 _health = 0;
-            else if (value >= maxHealth) 
+            else if (value >= maxHealth)
                 _health = maxHealth;
-            else 
+            else
                 _health = value;
         }
     }
@@ -41,6 +41,21 @@ public class UnitFightController : MonoBehaviour
     public float critModif;
     public float vamp;
     public bool melee;
+    private float _hitDamage;
+    public float hitDamage
+    {
+        get { return _hitDamage; }
+        set
+        {
+            if (value < 0)
+                _hitDamage = 0;
+            else
+                _hitDamage = value;
+        }
+    }
+    public int iterations;
+    public int limIter;
+    public bool dodged;
 
     public int cost;
     public int numberUnits;
@@ -48,9 +63,7 @@ public class UnitFightController : MonoBehaviour
     public SkillParent[] skills;
 
     public GameObject model;
-    //public Mesh mesh;
 
-    //public AnimatorController animator;
     public Race race;
 
 
@@ -73,9 +86,13 @@ public class UnitFightController : MonoBehaviour
         critChance = unitConfig.critChance;
         critModif = unitConfig.critModif;
 
-    model = Instantiate(unitConfig.model, transform.position- new Vector3 (0,0.95f,0), transform.rotation, gameObject.transform);
+        dodged = false;
+
+        model = Instantiate(unitConfig.model, transform.position - new Vector3(0, 0.95f, 0), transform.rotation, gameObject.transform);
         model.transform.SetAsFirstSibling();
-        effects = GetComponentInChildren<DissolveChilds>();
+
+        effectDeath = GetComponentInChildren<DissolveChilds>();
+        sparks = GetComponentInChildren<ParticleSystem>();
     }
 
     public void AttackMove(HexTile destTile, HexTile target)
@@ -85,36 +102,84 @@ public class UnitFightController : MonoBehaviour
 
     public void StartFight(HexTile target)
     {
-        moveController.animator.SetTrigger("Attack");
         enemy = target.unitOn.fightController;
         enemy.enemy = this;
+        dodged = enemy.dodged = false;        
+
+        float option = (float)System.Math.Round(Random.value);
+        moveController.animator.SetFloat("AttackBlend", option);
+        moveController.animator.SetTrigger("Attack");
+
+        enemy.moveController.TurnToEnemy(moveController.currentTile, false);
+
+        limIter = Random.Range(1, 3);
+        enemy.limIter = limIter + 10 ;
+        enemy.CalculateDamage(CheckCritDamage());
+        iterations = 0;
     }
 
     public void Hit()
     {
-            enemy.ReceiveDamage(CheckCritDamage());
+            sparks.Play();
+
+            if (iterations > limIter && !enemy.dodged)
+            {
+
+                enemy.ReceiveDamage();
+            }
+        
     }
 
     public void PreHit()
     {
-        enemy.moveController.animator.SetTrigger("Block");
+        iterations++;
+        if (iterations <= limIter)
+        {
+            float option = (float)System.Math.Round(Random.value);
+            enemy.moveController.animator.SetFloat("DefBlend", option);
+            enemy.moveController.animator.SetTrigger("Block");
+            
+            Debug.Log(iterations);
+        }
+    }
+    public void PostBlock()
+    {
+        if (dodged)
+        {
+            moveController.animator.SetTrigger("Stop");
+            return;
+        }
+            float option = (float)System.Math.Round(Random.value);
+            moveController.animator.SetFloat("AttackBlend", option);
+            moveController.animator.SetTrigger("Attack");        
     }
 
-    public void ReceiveDamage(float hitDamage)
+    public void CalculateDamage(float calcHitDamage)
     {
         if (Dodge())
+        {
+            dodged = true;
             return;
+        }
+        var dam = Random.Range(0.8f * calcHitDamage, 1.2f * calcHitDamage);
+        hitDamage = dam - (dam * (armor / 100));
+    }
 
-        hitDamage = Random.Range(0.8f * hitDamage, 1.2f * hitDamage)-(hitDamage*(armor/100));
+    public void ReceiveDamage()
+    {
         var prevHealth = health;
         health -= hitDamage;
         HealthChanged?.Invoke(health);
 
-        enemy.Vampirism(prevHealth-health);
+        enemy.Vampirism(prevHealth - health);
 
         if (health <= 0)
         {
             StartCoroutine("Death");
+        }
+        else
+        {
+            moveController.animator.SetTrigger("Damaged");
         }
 
     }
@@ -124,7 +189,7 @@ public class UnitFightController : MonoBehaviour
         moveController.animator.SetTrigger("Death");
         moveController.currentTile.MakeFree();
         yield return new WaitForSeconds(1.5f);
-        effects.ResetAndStart();
+        effectDeath.ResetAndStart();
         yield return new WaitForSeconds(6);
         gameObject.SetActive(false);
         moveController.currentTile.MakeFree();
@@ -132,23 +197,18 @@ public class UnitFightController : MonoBehaviour
 
     public bool Dodge()
     {
-        return Random.Range(0,100) < missAbil ? true: false;
+        return Random.Range(0, 100) < missAbil ? true : false;
     }
 
     public float CheckCritDamage()
     {
-        return Random.Range(0, 100) < critChance ? damage*critModif/100 : damage;
+        return Random.Range(0, 100) < critChance ? damage * critModif / 100 : damage;
     }
 
-    public void Vampirism(float hitDamage)
+    public void Vampirism(float calcHitDamage)
     {
-        health += hitDamage * vamp / 100;
-    }
-
-    private IEnumerator DisTrigger(string trigger)
-    {
-        yield return new WaitForSeconds(0.1f);
-        moveController.animator.ResetTrigger("Death");
+        health += calcHitDamage * vamp / 100;
+        HealthChanged?.Invoke(health);
     }
 }
 

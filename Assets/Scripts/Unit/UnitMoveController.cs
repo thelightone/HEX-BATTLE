@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using static PlayerController;
+using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnitMoveController : MonoBehaviour
 {
@@ -107,18 +109,6 @@ public class UnitMoveController : MonoBehaviour
 
             animator.ResetTrigger("Stop");
 
-            //ROTATE
-            //while (elapsedTime < waitTime && step == 2 && Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(targRot.eulerAngles.y))
-            //{
-            //    //animator.SetFloat("TurnBlend",1f);
-            //    //transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
-            //    elapsedTime += Time.deltaTime;
-
-            //    yield return null;
-            //}
-            //animator.SetFloat("TurnBlend", 0.0f);
-
-            //MOVE
             elapsedTime = 0;
 
             startRot = transform.GetChild(0).transform.rotation;
@@ -126,7 +116,7 @@ public class UnitMoveController : MonoBehaviour
             while (elapsedTime < waitTime)
             {
                 smoothProgress = elapsedTime / waitTime;
-                waitTime = 0.4f;
+                waitTime = 0.5f;
 
                 if (step == 2)
                 {
@@ -143,18 +133,16 @@ public class UnitMoveController : MonoBehaviour
 
                 if (Math.Abs(Convert.ToInt32(startRot.eulerAngles.y) - Convert.ToInt32(afterTargRot.eulerAngles.y))>20 && currentPath.Count > 2 && step > 1)
                 {
-                    waitTime = 0.4f;
+                    waitTime = 0.5f;
                     if (step == 2)
                     {
-                        waitTime = 1f;
+                        waitTime = 1.5f;
                         smoothProgress = SmoothStart(smoothProgress);
                         
                     }
           
-                    transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1.1f, 0), currentPath[2].transform.position + new Vector3(0, 1.1f, 0), smoothProgress / 2);
-                    waitTime *= 4;
-                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (smoothProgress));
-                    waitTime /= 4;
+                    transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1.1f, 0), currentPath[2].transform.position + new Vector3(0, 1.1f, 0), smoothProgress/2);
+                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, elapsedTime/waitTime+0.1f);                    
                     Debug.Log(waitTime + " " + step);
                 }
                 else
@@ -174,7 +162,7 @@ public class UnitMoveController : MonoBehaviour
                         animator.SetTrigger("Step");
                         waitTime = 1f;
                         smoothProgress = SmoothEnd(smoothProgress);
-                        animator.SetTrigger("Stop");
+                       // animator.SetTrigger("Stop");
 
                     }
                     if (step != 2 && !oneStep && currentPath.Count == 2)
@@ -190,8 +178,7 @@ public class UnitMoveController : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            //if (Convert.ToInt32(startRot.eulerAngles.y) != Convert.ToInt32(afterTargRot.eulerAngles.y) && currentPath.Count > 2 && step > 1)
-            //currentPath.RemoveAt(0);
+
             animator.ResetTrigger("Step");
             animator.ResetTrigger("Run");
             animator.SetTrigger("Stop");
@@ -201,28 +188,7 @@ public class UnitMoveController : MonoBehaviour
 
         if (enemy != null)
         {
-            animator.SetTrigger("Step");
-            elapsedTime = 0;
-            waitTime = 0.5f;
-
-            startRot = transform.GetChild(0).transform.rotation;
-
-            relativePos = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
-
-            targRot = Quaternion.LookRotation(relativePos, Vector3.up);
-
-            while (elapsedTime < waitTime && transform.GetChild(0).transform.rotation != targRot)
-            {
-                transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (elapsedTime / waitTime));
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
-
-            animator.ResetTrigger("Step");
-            animator.SetTrigger("Stop");
-
-            fightController.StartFight(enemy);
+            TurnToEnemy(enemy, true);
         }
 
         choose.SetActive(false);
@@ -235,6 +201,40 @@ public class UnitMoveController : MonoBehaviour
         beAim.UpdateCoord();
         BattleSystem.Instance.OnAct();
         step = 0;
+    }
+
+    public void TurnToEnemy(HexTile enemy, bool fight)
+    {
+        StartCoroutine(TurnToEnemyCor(enemy,fight));
+    }
+
+    public IEnumerator TurnToEnemyCor(HexTile enemy, bool fight)
+    {
+        float elapsedTime = 0;
+       // var waitTime = 0.5f;
+        var startRot = transform.GetChild(0).transform.rotation;
+        var relativePos = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z);
+        var targRot = Quaternion.LookRotation(relativePos, Vector3.up);
+
+        if (Math.Abs(Convert.ToInt32(startRot.eulerAngles.y) - Convert.ToInt32(targRot.eulerAngles.y)) > 20)
+        {
+            float waitTime = 0.4f + Math.Abs((Convert.ToInt32(startRot.eulerAngles.y) - Convert.ToInt32(targRot.eulerAngles.y)) / 1000);
+            animator.SetTrigger("Step");
+
+            while (elapsedTime < waitTime && transform.GetChild(0).transform.rotation != targRot)
+            {
+                transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, targRot, (SmoothStart(elapsedTime / waitTime)));
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            animator.ResetTrigger("Step");
+            animator.SetTrigger("Stop");
+        }
+
+        if(fight) 
+        fightController.StartFight(enemy);
     }
 
     public void Range(HexTile checkedHex)

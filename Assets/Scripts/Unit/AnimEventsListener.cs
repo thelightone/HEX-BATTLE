@@ -18,4 +18,8 @@ public class AnimEventsListener : MonoBehaviour
     {
         unit.PreHit();
     }
+    public void PostBlock()
+    {
+        unit.PostBlock();
+    }
 }

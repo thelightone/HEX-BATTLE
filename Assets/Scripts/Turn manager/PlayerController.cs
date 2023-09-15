@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
         foreach (var unit in units)
         {
             unit.active.SetActive(true);
+            unit.beAim.DislightAim(1);
         }
     }
 

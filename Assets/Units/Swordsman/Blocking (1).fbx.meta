@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f3688b924c56de2438f95d6189a019fb
+guid: c95ecf4a061cbd748ba6f400f0e9ecf5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -39,8 +39,8 @@ ModelImporter:
       name: mixamo.com
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 7
-      lastFrame: 39
+      firstFrame: 0
+      lastFrame: 28
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,7 +60,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.42750037
+      - time: 0.44631305
         functionName: PostBlock
         data: 
         objectReferenceParameter: {instanceID: 0}
