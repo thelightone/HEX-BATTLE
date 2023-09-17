@@ -1213,6 +1213,11 @@ MonoBehaviour:
   enemy: {fileID: 0}
   effectDeath: {fileID: 0}
   sparks: {fileID: 0}
+  x: {fileID: 0}
+  xx: {fileID: 0}
+  xx2: {fileID: 0}
+  xx3: {fileID: 0}
+  xx4: {fileID: 0}
   maxHealth: 0
   damage: 0
   armor: 0
@@ -1222,9 +1227,9 @@ MonoBehaviour:
   critModif: 0
   vamp: 0
   melee: 0
-  hitDamage: 0
   iterations: 0
   limIter: 0
+  dodged: 0
   cost: 0
   numberUnits: 0
   skills: []

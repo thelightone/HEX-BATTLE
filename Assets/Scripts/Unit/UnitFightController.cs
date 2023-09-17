@@ -5,6 +5,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using static UnitConfig;
 using DissolveExample;
+using UnityEngine.VFX;
 
 public class UnitFightController : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class UnitFightController : MonoBehaviour
 
     public delegate void HealthChangedDelegate(float newHealth);
     public event HealthChangedDelegate HealthChanged;
+
+    public VisualEffect x;
+    public ParticleSystem[] xx;
+
+
 
     public float maxHealth;
     private float _health;
@@ -93,6 +99,9 @@ public class UnitFightController : MonoBehaviour
 
         effectDeath = GetComponentInChildren<DissolveChilds>();
         sparks = GetComponentInChildren<ParticleSystem>();
+
+        x = GetComponentInChildren<VisualEffect>();
+        xx = GetComponentsInChildren<ParticleSystem>();
     }
 
     public void AttackMove(HexTile destTile, HexTile target)
@@ -120,14 +129,19 @@ public class UnitFightController : MonoBehaviour
 
     public void Hit()
     {
-            sparks.Play();
+        //    sparks.Play();
 
-            if (iterations > limIter && !enemy.dodged)
+           x.Play();
+foreach (var y in xx)
+        {
+            y.Play();
+        }
+
+        if (iterations > limIter && !enemy.dodged)
             {
-
                 enemy.ReceiveDamage();
             }
-        
+       
     }
 
     public void PreHit()
