@@ -120,7 +120,7 @@ Material:
     - _SrcBlend: 5
     - _UVSec: 0
     - _ZWrite: 0
-    - _heat: 0.06
+    - _heat: 0.05
     m_Colors:
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 2, g: 2, b: 2, a: 1}
