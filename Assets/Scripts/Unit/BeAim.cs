@@ -30,6 +30,8 @@ public class BeAim : MonoBehaviour
     public GameObject leftPart;
     public GameObject leftTopPart;
 
+    public GameObject shootPart;
+
     public Dictionary<GameObject, HexTile> dict = new Dictionary<GameObject, HexTile>();
 
     private void Start()
@@ -164,10 +166,16 @@ public class BeAim : MonoBehaviour
         leftBotPart.transform.GetChild(i).gameObject.SetActive(false);
         leftPart.transform.GetChild(i).gameObject.SetActive(false);
         leftTopPart.transform.GetChild(i).gameObject.SetActive(false);
+        shootPart.transform.GetChild(i).gameObject.SetActive(false);
     }
 
     public void Attack(BeAim beAim, GameObject sector)
     {
+        if (sector == shootPart)
+        {
+            TileManager.Instance.activeUnit.fightController.PreStartShoot(curHex);
+        }
+
         foreach (var key in beAim.dict.Keys)
         {
             if (sector == key)
@@ -187,6 +195,11 @@ public class BeAim : MonoBehaviour
                 selectSector.transform.GetChild(1).gameObject.SetActive(true);
                 TileManager.Instance.Highlight(dict[selectSector]);
             }
+        }
+        else if (selectSector == shootPart && !TileManager.Instance.activeUnit.fightController.melee)
+        {
+            DislightAim(1);
+            selectSector.transform.GetChild(1).gameObject.SetActive(true);
         }
     }
 }

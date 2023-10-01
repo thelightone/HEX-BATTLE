@@ -22,4 +22,8 @@ public class AnimEventsListener : MonoBehaviour
     {
         unit.PostBlock();
     }
+    public void Shoot()
+    {
+        unit.Shoot();
+    }
 }

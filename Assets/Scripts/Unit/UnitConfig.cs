@@ -5,7 +5,8 @@ using UnityEngine;
 public class UnitConfig : ScriptableObject
 {
     public int health;
-    public int damage;
+    public int damageMelee;
+    public int damageRange;
     public int armor;
     public int goRange;
 

@@ -15,13 +15,11 @@ public class UnitFightController : MonoBehaviour
     public DissolveChilds effectDeath;
     public ParticleSystem sparks;
 
+    public Arrow arrow;
+    public SwordEffect swordEffect;
+
     public delegate void HealthChangedDelegate(float newHealth);
     public event HealthChangedDelegate HealthChanged;
-
-    public VisualEffect x;
-    public ParticleSystem[] xx;
-
-
 
     public float maxHealth;
     private float _health;
@@ -72,6 +70,8 @@ public class UnitFightController : MonoBehaviour
 
     public Race race;
 
+    public HexTile shootTarget;
+
 
     private void Awake()
     {
@@ -79,7 +79,7 @@ public class UnitFightController : MonoBehaviour
 
         maxHealth = unitConfig.health;
         health = maxHealth;
-        damage = unitConfig.damage;
+        damage = unitConfig.damageMelee;
         armor = unitConfig.armor;
         goRange = unitConfig.goRange;
         vamp = unitConfig.vamp;
@@ -100,48 +100,64 @@ public class UnitFightController : MonoBehaviour
         effectDeath = GetComponentInChildren<DissolveChilds>();
         sparks = GetComponentInChildren<ParticleSystem>();
 
-        x = GetComponentInChildren<VisualEffect>();
-        xx = GetComponentsInChildren<ParticleSystem>();
+        arrow = GetComponentInChildren<Arrow>();
+        swordEffect = GetComponentInChildren<SwordEffect>();
     }
 
     public void AttackMove(HexTile destTile, HexTile target)
     {
+        InitializeEnemy(target);
         moveController.Move(destTile, target);
+    }
+
+    public void InitializeEnemy(HexTile target)
+    {
+        enemy = target.unitOn.fightController;
+        enemy.enemy = this;
+        dodged = enemy.dodged = false;
+        enemy.CalculateDamage(CheckCritDamage());
     }
 
     public void StartFight(HexTile target)
     {
-        enemy = target.unitOn.fightController;
-        enemy.enemy = this;
-        dodged = enemy.dodged = false;        
-
         float option = (float)System.Math.Round(Random.value);
         moveController.animator.SetFloat("AttackBlend", option);
         moveController.animator.SetTrigger("Attack");
 
-        enemy.moveController.TurnToEnemy(moveController.currentTile, false);
+        enemy.moveController.TurnToEnemy(moveController.currentTile, false, false);
 
         limIter = Random.Range(1, 3);
-        enemy.limIter = limIter + 10 ;
-        enemy.CalculateDamage(CheckCritDamage());
+        enemy.limIter = limIter + 10;
         iterations = 0;
+    }
+
+    public void PreStartShoot(HexTile target)
+    {
+        InitializeEnemy(target);
+        shootTarget = target;
+        moveController.TurnToEnemy(target, false, true);
+    }
+
+    public void StartShoot()
+    {
+        moveController.animator.SetTrigger("Shoot");
+    }
+
+    public void Shoot()
+    {
+        arrow.FlyToEnemy(shootTarget);
+        moveController.FinishMove();
+        shootTarget = null;
     }
 
     public void Hit()
     {
-        //    sparks.Play();
-
-           x.Play();
-foreach (var y in xx)
-        {
-            y.Play();
-        }
+        swordEffect.PlayEffects();
 
         if (iterations > limIter && !enemy.dodged)
-            {
-                enemy.ReceiveDamage();
-            }
-       
+        {
+            enemy.ReceiveDamage();
+        }
     }
 
     public void PreHit()
@@ -152,10 +168,11 @@ foreach (var y in xx)
             float option = (float)System.Math.Round(Random.value);
             enemy.moveController.animator.SetFloat("DefBlend", option);
             enemy.moveController.animator.SetTrigger("Block");
-            
+
             Debug.Log(iterations);
         }
     }
+
     public void PostBlock()
     {
         if (dodged)
@@ -163,9 +180,9 @@ foreach (var y in xx)
             moveController.animator.SetTrigger("Stop");
             return;
         }
-            float option = (float)System.Math.Round(Random.value);
-            moveController.animator.SetFloat("AttackBlend", option);
-            moveController.animator.SetTrigger("Attack");        
+        float option = (float)System.Math.Round(Random.value);
+        moveController.animator.SetFloat("AttackBlend", option);
+        moveController.animator.SetTrigger("Attack");
     }
 
     public void CalculateDamage(float calcHitDamage)
@@ -195,7 +212,6 @@ foreach (var y in xx)
         {
             moveController.animator.SetTrigger("Damaged");
         }
-
     }
 
     public IEnumerator Death()

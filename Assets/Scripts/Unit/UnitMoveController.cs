@@ -133,7 +133,7 @@ public class UnitMoveController : MonoBehaviour
 
                 if (Math.Abs(Convert.ToInt32(startRot.eulerAngles.y) - Convert.ToInt32(afterTargRot.eulerAngles.y))>20 && currentPath.Count > 2 && step > 1)
                 {
-                    waitTime = 0.5f;
+                    waitTime = 0.7f;
                     if (step == 2)
                     {
                         waitTime = 1.5f;
@@ -142,7 +142,7 @@ public class UnitMoveController : MonoBehaviour
                     }
           
                     transform.position = CubicSpline(startPoint, nextTile.transform.position + new Vector3(0, 1.1f, 0), currentPath[2].transform.position + new Vector3(0, 1.1f, 0), smoothProgress/2);
-                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, elapsedTime/waitTime+0.1f);                    
+                    transform.GetChild(0).transform.rotation = Quaternion.Lerp(startRot, afterTargRot, (elapsedTime/waitTime)*0.9f);                    
                     Debug.Log(waitTime + " " + step);
                 }
                 else
@@ -188,27 +188,33 @@ public class UnitMoveController : MonoBehaviour
 
         if (enemy != null)
         {
-            TurnToEnemy(enemy, true);
+            TurnToEnemy(enemy, true, false);
         }
 
-        choose.SetActive(false);
         currentTile = destTile2;
         destTile2.busy = true;
         destTile2.unitOn = this;
+        isMoving = false;
+
+        FinishMove();
+    }
+
+    public void FinishMove()
+    {
+        choose.SetActive(false);
         TileManager.Instance.DisSelect();
         TileManager.Instance.DisChooseUnit(this);
-        isMoving = false;
         beAim.UpdateCoord();
         BattleSystem.Instance.OnAct();
         step = 0;
     }
 
-    public void TurnToEnemy(HexTile enemy, bool fight)
+    public void TurnToEnemy(HexTile enemy, bool fight, bool shoot)
     {
-        StartCoroutine(TurnToEnemyCor(enemy,fight));
+        StartCoroutine(TurnToEnemyCor(enemy,fight, shoot));
     }
 
-    public IEnumerator TurnToEnemyCor(HexTile enemy, bool fight)
+    public IEnumerator TurnToEnemyCor(HexTile enemy, bool fight, bool shoot)
     {
         float elapsedTime = 0;
        // var waitTime = 0.5f;
@@ -235,6 +241,8 @@ public class UnitMoveController : MonoBehaviour
 
         if(fight) 
         fightController.StartFight(enemy);
+        if(shoot)
+        animator.SetTrigger("Shoot");
     }
 
     public void Range(HexTile checkedHex)
@@ -292,7 +300,8 @@ public class UnitMoveController : MonoBehaviour
 
     private float SmoothStep(float progress)
     {
-
+        progress = Mathf.Lerp(-1, 1, progress);
+        progress = progress * progress;
         return progress;
     }
     private Vector3 Bezier(Vector3 a, Vector3 b, Vector3 c, float progress)

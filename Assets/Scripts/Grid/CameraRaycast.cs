@@ -19,11 +19,8 @@ public class CameraRaycast : MonoBehaviour
 
     void Update()
     {
-
         RaycastHit hit;
-        var plane = new Plane(Vector3.up, Vector3.zero);
         _mousePos = Input.mousePosition;
-
         var ray = _mainCamera.ScreenPointToRay(_mousePos);
 
         if (Physics.Raycast(ray, out hit))
@@ -35,6 +32,7 @@ public class CameraRaycast : MonoBehaviour
             {
                 HighlightUnit(parent);
             }
+
             else
             {
                 TileManager.Instance.DisLightUnit();
@@ -44,6 +42,7 @@ public class CameraRaycast : MonoBehaviour
                 {
                     _targetHex = parent.GetComponent<HexTile>();
                     _targetHex.Highlight();
+
                     if (Input.GetMouseButtonUp(0))
                     {
                         _targetHex.Select();
@@ -55,7 +54,6 @@ public class CameraRaycast : MonoBehaviour
 
     private void HighlightUnit(Transform parent)
     {
-
         _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
 
         if (_targetUnit.player == BattleSystem.Instance.curPlayer)
