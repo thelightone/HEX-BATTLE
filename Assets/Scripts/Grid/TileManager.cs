@@ -105,6 +105,7 @@ public class TileManager : MonoBehaviour
             DisChooseUnit(activeUnit);
         }
         activeUnit = unit;
+        activeUnit.beAim.UpdateCoord();
         activeUnit.choose.SetActive(true);
         highlight.SetActive(true);
         activeUnit.Range(activeUnit.currentTile);

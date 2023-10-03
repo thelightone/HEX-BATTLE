@@ -36,7 +36,8 @@ public class UnitFightController : MonoBehaviour
                 _health = value;
         }
     }
-    public float damage;
+    public float damageMelee;
+    public float damageRange;
     public float armor;
     public float goRange;
 
@@ -79,7 +80,8 @@ public class UnitFightController : MonoBehaviour
 
         maxHealth = unitConfig.health;
         health = maxHealth;
-        damage = unitConfig.damageMelee;
+        damageMelee = unitConfig.damageMelee;
+        damageRange = unitConfig.damageRange;
         armor = unitConfig.armor;
         goRange = unitConfig.goRange;
         vamp = unitConfig.vamp;
@@ -106,16 +108,16 @@ public class UnitFightController : MonoBehaviour
 
     public void AttackMove(HexTile destTile, HexTile target)
     {
-        InitializeEnemy(target);
+        InitializeEnemy(target, true);
         moveController.Move(destTile, target);
     }
 
-    public void InitializeEnemy(HexTile target)
+    public void InitializeEnemy(HexTile target, bool melee)
     {
         enemy = target.unitOn.fightController;
         enemy.enemy = this;
         dodged = enemy.dodged = false;
-        enemy.CalculateDamage(CheckCritDamage());
+        enemy.CalculateDamage(CheckCritDamage(melee));
     }
 
     public void StartFight(HexTile target)
@@ -133,7 +135,7 @@ public class UnitFightController : MonoBehaviour
 
     public void PreStartShoot(HexTile target)
     {
-        InitializeEnemy(target);
+        InitializeEnemy(target, false);
         shootTarget = target;
         moveController.TurnToEnemy(target, false, true);
     }
@@ -222,7 +224,7 @@ public class UnitFightController : MonoBehaviour
         effectDeath.ResetAndStart();
         yield return new WaitForSeconds(6);
         gameObject.SetActive(false);
-        moveController.currentTile.MakeFree();
+        moveController.player.units.Remove(moveController);
     }
 
     public bool Dodge()
@@ -230,8 +232,9 @@ public class UnitFightController : MonoBehaviour
         return Random.Range(0, 100) < missAbil ? true : false;
     }
 
-    public float CheckCritDamage()
+    public float CheckCritDamage(bool melee)
     {
+        var damage = melee ? damageMelee : damageRange;
         return Random.Range(0, 100) < critChance ? damage * critModif / 100 : damage;
     }
 

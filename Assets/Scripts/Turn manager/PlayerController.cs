@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -41,7 +42,10 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var unit in units)
         {
-            unit.active.SetActive(true);
+            if (unit.actions>0)
+                unit.active.SetActive(true);
+            else
+                unit.active.SetActive(false);
             unit.beAim.DislightAim(1);
         }
     }
@@ -59,8 +63,16 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void ActiveUnits()
+    public bool ActiveUnits()
     {
+       return units.Find(unit => unit.actions > 0);
+    }
 
+    public void ReactivateUnits()
+    {
+        foreach (var unit in units)
+        {
+            unit.actions = 2;
+        }
     }
 }

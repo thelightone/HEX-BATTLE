@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43a01d9d07e4b4830a6e0c71879903e8, type: 3}
-  m_Name: SwordsmanConfig
+  m_Name: BowmanConfig
   m_EditorClassIdentifier: 
   health: 100
-  damage: 20
+  damageMelee: 5
+  damageRange: 20
   armor: 5
   goRange: 4
   missAbil: 5
   critChance: 5
   critModif: 150
   vamp: 10
-  melee: 1
+  melee: 0
   cost: 2
   numberUnits: 2
   skills: []
   race: 0
-  model: {fileID: 5621705377635526591, guid: c8a5d2a0e952747cc84eaa94720fb0bd, type: 3}
+  model: {fileID: 1943824165509775549, guid: eab9a713d628c9346be2c65291ba1bf0, type: 3}

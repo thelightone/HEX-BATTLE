@@ -15,7 +15,7 @@ public class Arrow : MonoBehaviour
     public void FlyToEnemy(HexTile tile)
     {
         destTile = tile;
-        gameObject.SetActive(true);
+        gameObject.transform.GetChild(0).gameObject.SetActive(true);
         transform.position = startPoint.transform.position;
         transform.rotation = startPoint.transform.rotation;
         StartCoroutine(IFlyToEnemy());
@@ -42,7 +42,8 @@ public class Arrow : MonoBehaviour
         }
 
         destTile.unitOn.fightController.ReceiveDamage();
-        gameObject.SetActive(false);
+        explos.Play();
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
 
     }
 

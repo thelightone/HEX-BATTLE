@@ -34,6 +34,8 @@ public class BeAim : MonoBehaviour
 
     public Dictionary<GameObject, HexTile> dict = new Dictionary<GameObject, HexTile>();
 
+    public bool enemyNear;
+
     private void Start()
     {
         moveController = GetComponentInParent<UnitMoveController>();
@@ -48,7 +50,7 @@ public class BeAim : MonoBehaviour
 
     public void UpdateCoord()
     {
-
+        enemyNear = false;
         curHex = moveController.currentTile;
         int x = curHex.offsetCoord.x;
         int y = curHex.offsetCoord.y;
@@ -69,6 +71,10 @@ public class BeAim : MonoBehaviour
                     if (tile.unitOn.player == BattleSystem.Instance.curPlayer)
                     {
                         continue;
+                    }
+                    else
+                    {
+                        enemyNear = true;
                     }
                 }
                 if (tile.offsetCoord == new Vector2Int(x, y - 1))
@@ -112,6 +118,10 @@ public class BeAim : MonoBehaviour
                     if (tile.unitOn.player == BattleSystem.Instance.curPlayer)
                     {
                         continue;
+                    }
+                    else
+                    {
+                        enemyNear = true;
                     }
                 }
                 if (tile.offsetCoord == new Vector2Int(x + 1, y - 1))
@@ -171,7 +181,7 @@ public class BeAim : MonoBehaviour
 
     public void Attack(BeAim beAim, GameObject sector)
     {
-        if (sector == shootPart)
+        if (sector == shootPart && !TileManager.Instance.activeUnit.fightController.melee && !TileManager.Instance.activeUnit.beAim.enemyNear)
         {
             TileManager.Instance.activeUnit.fightController.PreStartShoot(curHex);
         }
@@ -196,10 +206,11 @@ public class BeAim : MonoBehaviour
                 TileManager.Instance.Highlight(dict[selectSector]);
             }
         }
-        else if (selectSector == shootPart && !TileManager.Instance.activeUnit.fightController.melee)
+        else if (selectSector == shootPart && !TileManager.Instance.activeUnit.fightController.melee && !TileManager.Instance.activeUnit.beAim.enemyNear)
         {
             DislightAim(1);
             selectSector.transform.GetChild(1).gameObject.SetActive(true);
         }
     }
+
 }

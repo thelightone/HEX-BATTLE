@@ -13,7 +13,8 @@ public class NewRound : State
     {
 
         BattleSystem.round++;
-
+        BattleSystem.rightFighter.ReactivateUnits();
+        BattleSystem.leftFighter.ReactivateUnits();
         BattleSystem.SetState(new PlayerTurn(BattleSystem));
     }
 

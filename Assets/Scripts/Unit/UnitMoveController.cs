@@ -30,6 +30,8 @@ public class UnitMoveController : MonoBehaviour
     public bool isMoving = false;
     public int step = 0;
 
+    public int actions = 2;
+
     public Animator animator;
 
 
@@ -205,6 +207,7 @@ public class UnitMoveController : MonoBehaviour
         TileManager.Instance.DisSelect();
         TileManager.Instance.DisChooseUnit(this);
         beAim.UpdateCoord();
+        actions--;
         BattleSystem.Instance.OnAct();
         step = 0;
     }

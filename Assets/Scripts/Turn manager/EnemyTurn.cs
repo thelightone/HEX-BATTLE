@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EnemyTurn : State
+﻿public class EnemyTurn : State
 { 
     public EnemyTurn(BattleSystem battleSystem) : base(battleSystem)
     {
@@ -11,19 +7,32 @@ public class EnemyTurn : State
 
     public override void Start()
     {
-        BattleSystem.leftFighter.DisLight();
-        actions = 0;
-        BattleSystem.curPlayer = BattleSystem.rightFighter;
-
-        BattleSystem.rightFighter.HighLight();
+        if (!BattleSystem.rightFighter.ActiveUnits())
+        {
+            if (!BattleSystem.leftFighter.ActiveUnits())
+                BattleSystem.SetState(new NewRound(BattleSystem));
+            else
+                BattleSystem.SetState(new PlayerTurn(BattleSystem));
+        }
+        else
+        {
+            BattleSystem.leftFighter.DisLight();
+            actions = 0;
+            BattleSystem.curPlayer = BattleSystem.rightFighter;
+            BattleSystem.rightFighter.HighLight();
+        }
     }
 
     public override void Act()
     {
         actions++;
+
+        BattleSystem.rightFighter.DisLight();
+        BattleSystem.rightFighter.HighLight();
+
         if (actions > 1)
-        {            
-            BattleSystem.SetState(new NewRound(BattleSystem));
+        {
+            BattleSystem.SetState(new PlayerTurn(BattleSystem));
         }
 
     }

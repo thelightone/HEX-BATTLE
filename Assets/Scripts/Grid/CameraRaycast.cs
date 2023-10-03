@@ -56,7 +56,7 @@ public class CameraRaycast : MonoBehaviour
     {
         _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
 
-        if (_targetUnit.player == BattleSystem.Instance.curPlayer)
+        if (_targetUnit.player == BattleSystem.Instance.curPlayer && _targetUnit.actions>0)
         {
             TileManager.Instance.LightUnit(_targetUnit);
 
