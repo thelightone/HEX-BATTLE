@@ -63,9 +63,8 @@ public class UnitFightController : MonoBehaviour
     public bool dodged;
 
     public int cost;
-    public int numberUnits;
 
-    public SkillParent[] skills;
+    public SkillParent skill;
 
     public GameObject model;
 
@@ -87,8 +86,7 @@ public class UnitFightController : MonoBehaviour
         vamp = unitConfig.vamp;
         melee = unitConfig.melee;
         cost = unitConfig.cost;
-        numberUnits = unitConfig.numberUnits;
-        skills = unitConfig.skills;
+        skill = unitConfig.skill;
         race = unitConfig.race;
         missAbil = unitConfig.missAbil;
         critChance = unitConfig.critChance;
@@ -243,5 +241,11 @@ public class UnitFightController : MonoBehaviour
         health += calcHitDamage * vamp / 100;
         HealthChanged?.Invoke(health);
     }
+
+    public void ActivateSkill()
+    {
+        skill.Init(this);
+    }
+
 }
 

@@ -17,12 +17,8 @@ public class UnitConfig : ScriptableObject
     public bool melee;
 
     public int cost;
-    public int numberUnits;
 
-    public SkillParent[] skills;
-    //public Mesh mesh;
-
-    //public AnimatorController animator;
+    public SkillParent skill;
 
     public Race race;
     public GameObject model;

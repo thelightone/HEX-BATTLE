@@ -11,6 +11,7 @@ public class NewRound : State
 
     public override void Start()
     {
+        BuffManager.Instance.NewRound();
 
         BattleSystem.round++;
         BattleSystem.rightFighter.ReactivateUnits();
