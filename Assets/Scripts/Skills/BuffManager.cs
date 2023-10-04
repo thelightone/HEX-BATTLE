@@ -20,9 +20,18 @@ public class BuffManager : MonoBehaviour
         {
             activeBuffs.Remove(buff);
             if (buff.Value > 1)
+            {
                 AddBuff(buff.Key, buff.Value - 1);
+
+                if (buff.Key.durationType == SkillParent.DurationType.everyTurn)
+                {
+                    buff.Key.OnActivate();
+                }
+            }
             else
+            {
                 buff.Key.OnDeactivate();
+            }
         }
     }
 

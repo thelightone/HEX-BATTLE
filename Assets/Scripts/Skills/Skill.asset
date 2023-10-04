@@ -14,16 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
   skillName: 
-  durated: 0
   duration: 0
-  self: 1
   invoker: {fileID: 0}
-  unitAim: {fileID: 0}
-  hexAim: {fileID: 0}
+  unitAims:
+  - {fileID: 0}
+  hexAims: []
+  aimType: 5
+  aimPlayer: 2
+  durationType: 0
   Changes:
   - changedParameter: 1
-    IncreaseBy: -5
+    IncreaseBy: 0
     MultiplyBy: 1
-  - changedParameter: 2
-    IncreaseBy: 5
-    MultiplyBy: 2

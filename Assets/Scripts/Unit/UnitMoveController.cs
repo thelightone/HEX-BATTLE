@@ -209,6 +209,7 @@ public class UnitMoveController : MonoBehaviour
         beAim.UpdateCoord();
         actions--;
         BattleSystem.Instance.OnAct();
+        CameraRaycast.turnState = TurnState.SelectUnit;
         step = 0;
     }
 

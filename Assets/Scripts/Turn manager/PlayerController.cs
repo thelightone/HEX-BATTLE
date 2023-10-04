@@ -75,4 +75,16 @@ public class PlayerController : MonoBehaviour
             unit.actions = 2;
         }
     }
+
+    public List<UnitFightController> FightControllers()
+    {
+        var fightControllers = new List<UnitFightController>();
+
+        foreach (var item in units)
+        {
+            fightControllers.Add(item.fightController);
+        }
+
+        return fightControllers;
+    }
 }

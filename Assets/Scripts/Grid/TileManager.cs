@@ -20,8 +20,11 @@ public class TileManager : MonoBehaviour
     private GameObject lightUnit;
     [SerializeField]
     private GameObject lightEnemy;
+    [SerializeField]
+    private GameObject lightSkill;
 
     public UnitMoveController activeUnit;
+    public SkillParent currentSkill;
 
 
     private void Awake()
@@ -74,6 +77,20 @@ public class TileManager : MonoBehaviour
         highlight.transform.position = tile.transform.position;
     }
 
+    public void LightSkill(HexTile tile)
+    {
+        lightSkill.gameObject.SetActive(true);
+
+        lightSkill.transform.position = tile.transform.position;
+    }
+
+    public void DislightSkill(HexTile tile)
+    {
+        lightSkill.gameObject.SetActive(false);
+
+        lightSkill.transform.position = tile.transform.position;
+    }
+
     public void Busy(HexTile tile)
     {
         highlight.transform.GetChild(0).gameObject.SetActive(false);
@@ -104,6 +121,7 @@ public class TileManager : MonoBehaviour
         {
             DisChooseUnit(activeUnit);
         }
+        lightUnit.SetActive(false);
         activeUnit = unit;
         activeUnit.beAim.UpdateCoord();
         activeUnit.choose.SetActive(true);

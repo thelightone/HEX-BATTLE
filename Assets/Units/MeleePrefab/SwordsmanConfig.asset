@@ -23,7 +23,6 @@ MonoBehaviour:
   vamp: 10
   melee: 1
   cost: 2
-  numberUnits: 2
-  skills: []
+  skill: {fileID: 11400000, guid: e66f44a09ffa32c4c80aa2fcff3bf262, type: 2}
   race: 0
   model: {fileID: 5621705377635526591, guid: c8a5d2a0e952747cc84eaa94720fb0bd, type: 3}

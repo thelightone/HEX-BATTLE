@@ -1,7 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+
+
+public enum TurnState
+{
+    SelectUnit,
+    MoveOrAttack,
+    ChooseSkillHex,
+    ChooseSkillUnit
+}
 
 public class CameraRaycast : MonoBehaviour
 {
@@ -11,6 +18,8 @@ public class CameraRaycast : MonoBehaviour
     private BeAim _activeAim;
     private Vector3 _mousePos;
     private Transform objectHit;
+
+    public static TurnState turnState = TurnState.SelectUnit;
 
     private void Start()
     {
@@ -26,57 +35,114 @@ public class CameraRaycast : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             objectHit = hit.transform;
-            var parent = objectHit.parent;
 
-            if (objectHit.GetComponentInParent<UnitMoveController>())
+            switch (turnState)
             {
-                HighlightUnit(parent);
+                case TurnState.SelectUnit:
+                    SelectUnitHandler();
+                    break;
+                case TurnState.MoveOrAttack:
+                    MoveOrAttackHandler();
+                    break;
+                case TurnState.ChooseSkillHex:
+                    ChooseSkillHexHandler();
+                    break;
+                case TurnState.ChooseSkillUnit:
+                    ChooseSkillUnitHandler();
+                    break;
             }
+           
+        }
+    }
 
-            else
+    private void SelectUnitHandler()
+    {
+        if (objectHit.GetComponentInParent<UnitMoveController>())
+        {
+            _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
+
+            if (_targetUnit.player == BattleSystem.Instance.curPlayer && _targetUnit.actions > 0)
             {
-                TileManager.Instance.DisLightUnit();
-                _activeAim?.DislightAim(1);
+                TileManager.Instance.LightUnit(_targetUnit);
 
-                if (TileManager.Instance.activeUnit != null && parent.GetComponent<HexTile>())
+                if (Input.GetMouseButtonUp(0))
                 {
-                    _targetHex = parent.GetComponent<HexTile>();
-                    _targetHex.Highlight();
+                    TileManager.Instance.ChooseUnit(_targetUnit);
+                    turnState = TurnState.MoveOrAttack;
+                }
+            }
+        }
+        else
+        {
+            TileManager.Instance.DisLightUnit();
+        }
+    }
 
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        _targetHex.Select();
-                    }
+    private void MoveOrAttackHandler()
+    {
+        if (objectHit.GetComponentInParent<UnitMoveController>())
+        {
+            _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
+
+            if (_targetUnit.player != BattleSystem.Instance.curPlayer && objectHit.GetComponent<AttackSector>())
+            {
+                _activeAim = _targetUnit.GetComponentInChildren<BeAim>();
+                _activeAim.LightAim(objectHit.parent.gameObject);
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _activeAim.Attack(_activeAim, objectHit.parent.gameObject);
+                }
+            }
+            else if (_targetUnit.player == BattleSystem.Instance.curPlayer && _targetUnit.actions > 0)
+            {
+                TileManager.Instance.LightUnit(_targetUnit);
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    TileManager.Instance.ChooseUnit(_targetUnit);
+                    turnState = TurnState.MoveOrAttack;
+                }
+            }
+        }
+        else
+        {
+           _activeAim?.DislightAim(1);
+
+            if (objectHit.parent.GetComponent<HexTile>())
+            {
+                _targetHex = objectHit.parent.GetComponent<HexTile>();
+                _targetHex.Highlight();
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _targetHex.Select();                    
                 }
             }
         }
     }
 
-    private void HighlightUnit(Transform parent)
+    private void ChooseSkillHexHandler()
     {
-        _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
-
-        if (_targetUnit.player == BattleSystem.Instance.curPlayer && _targetUnit.actions>0)
+        if (objectHit.parent.GetComponent<HexTile>())
         {
-            TileManager.Instance.LightUnit(_targetUnit);
+            _targetHex = objectHit.parent.GetComponent<HexTile>();
+            TileManager.Instance.LightSkill(_targetHex);
 
             if (Input.GetMouseButtonUp(0))
             {
-                TileManager.Instance.ChooseUnit(_targetUnit);
-            }
-        }
-        else if (_targetUnit.player != BattleSystem.Instance.curPlayer
-                && TileManager.Instance.activeUnit != null
-                && objectHit.GetComponent<AttackSector>())
-        {
-            _activeAim = _targetUnit.GetComponentInChildren<BeAim>();
-            _activeAim.LightAim(objectHit.parent.gameObject);
+                TileManager.Instance.currentSkill.hexAims.Add(_targetHex);
+                TileManager.Instance.currentSkill.OnActivate();
+                TileManager.Instance.DislightSkill(_targetHex);
 
-            if (Input.GetMouseButtonUp(0))
-            {
-                _activeAim.Attack(_activeAim, parent.gameObject);
+                turnState = TurnState.SelectUnit;
             }
         }
+    }
+
+    private void ChooseSkillUnitHandler()
+    {
+
     }
 }
 
