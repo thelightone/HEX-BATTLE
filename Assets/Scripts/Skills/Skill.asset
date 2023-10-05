@@ -19,8 +19,8 @@ MonoBehaviour:
   unitAims:
   - {fileID: 0}
   hexAims: []
-  aimType: 5
-  aimPlayer: 2
+  aimType: 1
+  aimPlayer: 0
   durationType: 0
   Changes:
   - changedParameter: 1

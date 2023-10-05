@@ -142,7 +142,31 @@ public class CameraRaycast : MonoBehaviour
 
     private void ChooseSkillUnitHandler()
     {
+        if (objectHit.GetComponentInParent<UnitMoveController>() && objectHit.GetComponent<AttackSector>())
+        {
+            _targetUnit = objectHit.GetComponentInParent<UnitMoveController>();
 
+            if ((_targetUnit.player != BattleSystem.Instance.curPlayer && TileManager.Instance.currentSkill.aimPlayer == SkillParent.AimPlayer.enemy)
+                || (_targetUnit.player == BattleSystem.Instance.curPlayer && TileManager.Instance.currentSkill.aimPlayer == SkillParent.AimPlayer.self)
+                || (TileManager.Instance.currentSkill.aimPlayer == SkillParent.AimPlayer.both))
+            {
+                _activeAim = _targetUnit.GetComponentInChildren<BeAim>();
+                _activeAim.LightSkill();
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    TileManager.Instance.currentSkill.unitAims.Add(_targetUnit.fightController);
+                    TileManager.Instance.currentSkill.OnActivate();
+                    _activeAim.DislightAim(1);
+
+                    turnState = TurnState.MoveOrAttack;
+                }
+            }       
+        }
+        else
+        {
+            _activeAim.DislightAim(1);
+        }
     }
 }
 

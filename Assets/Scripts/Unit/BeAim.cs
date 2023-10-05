@@ -31,6 +31,7 @@ public class BeAim : MonoBehaviour
     public GameObject leftTopPart;
 
     public GameObject shootPart;
+    public GameObject skillPart;
 
     public Dictionary<GameObject, HexTile> dict = new Dictionary<GameObject, HexTile>();
 
@@ -177,6 +178,7 @@ public class BeAim : MonoBehaviour
         leftPart.transform.GetChild(i).gameObject.SetActive(false);
         leftTopPart.transform.GetChild(i).gameObject.SetActive(false);
         shootPart.transform.GetChild(i).gameObject.SetActive(false);
+        skillPart.transform.GetChild(i).gameObject.SetActive(false);
     }
 
     public void Attack(BeAim beAim, GameObject sector)
@@ -212,5 +214,9 @@ public class BeAim : MonoBehaviour
             selectSector.transform.GetChild(1).gameObject.SetActive(true);
         }
     }
-
+    public void LightSkill()
+    {
+        DislightAim(1);
+        skillPart.transform.GetChild(1).gameObject.SetActive(true);
+    }
 }
