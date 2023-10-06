@@ -14,12 +14,17 @@ public class SkillParent : ScriptableObject
     public AimType aimType = new AimType();
     public AimPlayer aimPlayer = new AimPlayer();
     public DurationType durationType = new DurationType();
+    public Animator animator;
+    
 
     public void Init(UnitFightController skillInvoker)
     {
         TileManager.Instance.currentSkill = this;
 
         invoker = skillInvoker;
+
+        animator = invoker.moveController.animator;
+
         unitAims.Clear();
 
         if (durationType != DurationType.oneTime)

@@ -7,7 +7,8 @@ public enum TurnState
     SelectUnit,
     MoveOrAttack,
     ChooseSkillHex,
-    ChooseSkillUnit
+    ChooseSkillUnit,
+    Pause
 }
 
 public class CameraRaycast : MonoBehaviour
@@ -49,6 +50,9 @@ public class CameraRaycast : MonoBehaviour
                     break;
                 case TurnState.ChooseSkillUnit:
                     ChooseSkillUnitHandler();
+                    break;
+                case TurnState.Pause:
+                    PauseHandler();
                     break;
             }
            
@@ -159,7 +163,7 @@ public class CameraRaycast : MonoBehaviour
                     TileManager.Instance.currentSkill.OnActivate();
                     _activeAim.DislightAim(1);
 
-                    turnState = TurnState.MoveOrAttack;
+                    turnState = TurnState.SelectUnit;
                 }
             }       
         }
@@ -167,6 +171,11 @@ public class CameraRaycast : MonoBehaviour
         {
             _activeAim.DislightAim(1);
         }
+    }
+
+   private void PauseHandler()
+    {
+
     }
 }
 

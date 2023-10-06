@@ -6,13 +6,18 @@ using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
 
 [CreateAssetMenu(fileName = "ModifyParameterSkill", menuName = "Skills/ModifyParameter", order = 51)]
-public class ModifyParameter : SkillParent
+public class ModifyParameterSkill : SkillParent
 {
     public List<Effect> Changes = new List<Effect>();
 
     private float parameter;
 
     public override void OnActivate()
+    {
+        animator.SetTrigger("Skill");
+    }
+
+    public override void OnReactivate()
     {
         if (unitAims.Count == 0 && hexAims.Count > 0)
         {

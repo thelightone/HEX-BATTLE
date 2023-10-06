@@ -26,4 +26,9 @@ public class AnimEventsListener : MonoBehaviour
     {
         unit.Shoot();
     }
+
+    public void Skill()
+    {
+        TileManager.Instance.currentSkill.OnReactivate();
+    }
 }
